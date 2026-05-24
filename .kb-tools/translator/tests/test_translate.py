@@ -290,6 +290,8 @@ class TranslateArticlesTest(unittest.TestCase):
         self.assertIn("worker-", output)
         self.assertIn("[1/2] translating\ttopic/first.md", output)
         self.assertIn("[2/2] translating\ttopic/second.md", output)
+        self.assertIn("[1/2] translated\ttopic/resources/i18n/first-en.md", output)
+        self.assertIn("[2/2] translated\ttopic/resources/i18n/second-en.md", output)
         self.assertIn("Finished", output)
         self.assertIn("success: 2", output)
 

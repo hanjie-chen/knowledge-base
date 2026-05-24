@@ -61,7 +61,7 @@ class TranslateStagedArticlesHookTests(unittest.TestCase):
         ):
             exit_code = module.main()
 
-        self.assertEqual(exit_code, module.REVIEW_NEEDED)
+        self.assertEqual(exit_code, 0)
         self.assertEqual(
             [call.args for call in git_add.call_args_list],
             [

@@ -83,10 +83,7 @@ def run_translation_jobs(
                 )
             else:
                 relative_translation = translation_path.relative_to(repo_root).as_posix()
-                log(
-                    "worker-"
-                    f"{worker_id} [{index}/{total}] translated\t{relative_source}\t{relative_translation}"
-                )
+                log(f"worker-{worker_id} [{index}/{total}] translated\t{relative_translation}")
                 result = TranslationResult(
                     index=index,
                     source_path=relative_source,

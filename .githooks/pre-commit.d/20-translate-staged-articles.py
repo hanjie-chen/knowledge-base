@@ -7,9 +7,6 @@ import sys
 from pathlib import Path
 
 
-REVIEW_NEEDED = 2
-
-
 def log(status: str, message: str, *, stream=None, detail: bool = False, last: bool = False) -> None:
     if detail:
         prefix_name = "GITHOOK_LOG_DETAIL_PREFIX"
@@ -91,7 +88,7 @@ def main() -> int:
 
     if not candidates:
         log("ok", "no staged articles need translation", last=True)
-        return REVIEW_NEEDED if sidecar_moves else 0
+        return 0
 
     model = os.environ.get("KB_TRANSLATOR_MODEL")
     total = len(candidates)
@@ -127,7 +124,7 @@ def main() -> int:
         return 1
 
     log("add", "staged generated translations", last=True)
-    return REVIEW_NEEDED
+    return 0
 
 
 if __name__ == "__main__":

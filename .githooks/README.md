@@ -44,7 +44,7 @@ Current order:
    - moves matching English sidecars when staged source articles are renamed
    - translates missing or outdated English sidecars
    - stages generated translation files
-   - asks for review if it changes staged files
+   - includes generated translation files in the current commit
 
 Typical successful output:
 
@@ -56,7 +56,7 @@ Typical successful output:
    └─ [ok] translate: no staged articles need translation
 ```
 
-If one or more hooks generate changes, the runner keeps going and stops once at the end:
+Some hooks may ask for review after changing staged files. In that case, the runner keeps going and stops once at the end:
 
 ```text
 [pre-commit]
