@@ -18,7 +18,7 @@
 
 每一层目录都表示一个更具体的主题范围，把文章的分类尽可能交给目录路径表达，从而使得文件名保持简短。
 
-例如：`ai/coding-agents/codex/codex-cli.md`
+例如：`tools/git/commands.md`
 
 如果你是第一次进入这个仓库，通常可以从顶层主题目录开始，再顺着目录 `README.md` 往下阅读。
 
@@ -86,8 +86,10 @@ git config --get core.hooksPath
 
 ```shell
 python3 --version
-codex exec # .kb-tools/translator 使用
+codex exec
 ```
+
+`.kb-tools/translator` 和翻译 pre-commit hook 会调用 codex exec。如果默认模型不可用，请先升级 Codex CLI，或显式指定模型。
 
 ## Publishing
 

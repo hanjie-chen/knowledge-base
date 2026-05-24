@@ -1,9 +1,3 @@
-# ai-agent
-
-AI agent 一般指：模型不只会聊天，还能调用工具并执行动作（读文件、改代码、跑命令、循环迭代到完成目标）。
-
-
-
 ## agents.md
 
 可以把 AGENTS.md 理解成：“写给 AI coding agent 看的项目说明书 / 工作规约”。

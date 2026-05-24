@@ -10,6 +10,11 @@
 
 ## When Writing or Revising Articles
 
+- Article title is stored in the YAML front matter `Title` field.
+- Do not add a Markdown `#` heading only to repeat the article title.
+- In article bodies, `#` headings are normal top-level sections and may appear multiple times.
+- Use only `#`, `##`, and `###` heading levels in articles.
+- Do not use `####`, `#####`, or deeper heading levels.
 - Prefer English for Markdown `#`, `##`, and `###` headings whenever practical.
 - Headings should stay short and descriptive.
 - Body content can be Chinese, English, or mixed, depending on what explains the topic most clearly.
