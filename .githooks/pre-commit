@@ -12,6 +12,16 @@ SCRIPT_DIR = HOOK_DIR / "pre-commit.d"
 REVIEW_NEEDED = 2
 
 
+def configure_output_encoding() -> None:
+    for stream in (sys.stdout, sys.stderr):
+        if not hasattr(stream, "reconfigure"):
+            continue
+        try:
+            stream.reconfigure(encoding="utf-8")
+        except (OSError, ValueError):
+            pass
+
+
 def command_for(script_path: Path) -> list[str]:
     if script_path.suffix == ".py":
         return [sys.executable, str(script_path)]
@@ -29,6 +39,7 @@ def iter_hook_scripts() -> list[Path]:
 
 
 def main() -> int:
+    configure_output_encoding()
     review_needed = False
     scripts = iter_hook_scripts()
 
@@ -47,6 +58,7 @@ def main() -> int:
             check=False,
             env={
                 **os.environ,
+                "PYTHONIOENCODING": "utf-8",
                 "GITHOOK_LOG_ITEM_PREFIX": f"{child_prefix}├─ ",
                 "GITHOOK_LOG_LAST_PREFIX": f"{child_prefix}└─ ",
                 "GITHOOK_LOG_DETAIL_PREFIX": f"{child_prefix}│  ├─ ",

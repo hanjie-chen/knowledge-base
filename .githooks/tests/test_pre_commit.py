@@ -119,6 +119,25 @@ class PreCommitRunnerTests(unittest.TestCase):
             ],
         )
 
+    def test_forces_utf8_encoding_for_child_hooks(self):
+        module = load_module()
+        scripts = [Path(".githooks/pre-commit.d/10-first.py")]
+
+        with (
+            mock.patch.object(module, "iter_hook_scripts", return_value=scripts),
+            mock.patch.object(
+                module.subprocess,
+                "run",
+                return_value=subprocess.CompletedProcess([], 0),
+            ) as run,
+            contextlib.redirect_stdout(io.StringIO()),
+        ):
+            exit_code = module.main()
+
+        self.assertEqual(exit_code, 0)
+        env = run.call_args.kwargs["env"]
+        self.assertEqual(env["PYTHONIOENCODING"], "utf-8")
+
 
 if __name__ == "__main__":
     unittest.main()
