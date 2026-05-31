@@ -7,7 +7,7 @@ RolloutDate: 2024-11-14
 
 ```
 BriefIntroduction: 
-这是我和同事jiuqi在紫竹第三餐厅吃饭总结出来的经验，时间段大概在2024-11开始，到目前来说还在进行测试
+这是我和同事 jiuqi 在紫竹第三餐厅吃饭总结出来的经验，时间段大概在 2024-11 开始，到目前  2025-04 结束（笔者离职）
 ```
 
 <!-- split -->
@@ -32,7 +32,7 @@ BriefIntroduction:
 
 > [!note]
 >
-> 注意小黑板上会有额外的菜单，但是我好像都没有尝试过
+> 注意小黑板上会有额外的菜单，但是我都没有尝试过
 >
 > <img src="./resources/images/noddles-small-black.jpg" alt="small black" style="zoom:25%;" />
 >
@@ -94,7 +94,7 @@ jiuqi老师尝过之后不推荐，肉馅是剁碎的猪肉肘子
 
 # 烤鱼
 
-烤鱼，强烈推荐，非常好吃
+推荐，味道还可以
 
 菜单
 
@@ -155,3 +155,8 @@ jiuqi老师尝过之后不推荐，肉馅是剁碎的猪肉肘子
 炸小鸡腿，特别好吃，特别的入味，特别的新鲜，绝了
 
 <img src="./resources/images/fry-drumsticks.jpg" alt="fry chicken drumsticks" style="zoom:50%;" />
+
+炸芋泥球，好吃
+
+<img src="./resources/images/fry-taro-balls.jpg" alt="炸芋泥球" style="zoom:33%;" />
+
