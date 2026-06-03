@@ -66,7 +66,7 @@ articles-dir/
 
 ## Repository Setup
 
-如果要在本地维护这个仓库，建议先完成以下最小配置。
+维护这个仓库需要的配置。
 
 [Windows OS only] 启动大小写敏感
 
@@ -93,4 +93,6 @@ codex exec
 
 ## Publishing
 
-Push 到 `main` 的内容变更可能会触发网站内容同步。具体规则见 `.kb-tools/website_sync/` 和 `.github/workflows/`。
+Git push  会出发 github action 的检测规则，如果改动了那么满足发布标准的文章，那么就会触发网站同步。
+
+具体规则见 `.kb-tools/website_sync/` 和 `.github/workflows/`。
