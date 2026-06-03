@@ -82,6 +82,18 @@ KB_TRANSLATOR_JOBS=2 git commit
 
 By default, the staged translation hook starts one worker per staged article that needs translation.
 
+When translations run, job details are rendered as child nodes under the current run step:
+
+```text
+[pre-commit]
+└─ 20-translate-staged-articles.py
+   ├─ [run] translate: 1 staged article(s) need translation
+   │  └─ [job] [1/1] outdated_translation personal-growth/example.md
+   ├─ [run] translate: starting 1 worker(s)
+   │  └─ [job] worker-1 [1/1] translating	personal-growth/example.md
+   └─ [add] translate: staged generated translations
+```
+
 ## Tests
 
 Tests live in `.githooks/tests/` because they cover the hook system as a whole, not only one `pre-commit.d/` script.

@@ -78,6 +78,25 @@ class TranslateStagedArticlesHookTests(unittest.TestCase):
         with mock.patch.dict(module.os.environ, {"KB_TRANSLATOR_JOBS": "10"}):
             self.assertEqual(module.worker_count_for(3), 3)
 
+    def test_detail_logs_render_as_child_nodes(self):
+        module = load_module()
+        stdout = io.StringIO()
+
+        with (
+            mock.patch.dict(module.os.environ, {"GITHOOK_LOG_DETAIL_PREFIX": "   │  └─ "}),
+            contextlib.redirect_stdout(stdout),
+        ):
+            module.log(
+                "job",
+                "[1/1] outdated_translation personal-growth/example.md",
+                detail=True,
+            )
+
+        self.assertEqual(
+            stdout.getvalue(),
+            "   │  └─ [job] [1/1] outdated_translation personal-growth/example.md\n",
+        )
+
 
 if __name__ == "__main__":
     unittest.main()

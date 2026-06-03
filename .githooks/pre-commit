@@ -61,7 +61,7 @@ def main() -> int:
                 "PYTHONIOENCODING": "utf-8",
                 "GITHOOK_LOG_ITEM_PREFIX": f"{child_prefix}├─ ",
                 "GITHOOK_LOG_LAST_PREFIX": f"{child_prefix}└─ ",
-                "GITHOOK_LOG_DETAIL_PREFIX": f"{child_prefix}│  ├─ ",
+                "GITHOOK_LOG_DETAIL_PREFIX": f"{child_prefix}│  └─ ",
             },
         )
         if result.returncode == REVIEW_NEEDED:
