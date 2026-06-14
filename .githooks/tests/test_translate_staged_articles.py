@@ -83,7 +83,7 @@ class TranslateStagedArticlesHookTests(unittest.TestCase):
         stdout = io.StringIO()
 
         with (
-            mock.patch.dict(module.os.environ, {"GITHOOK_LOG_DETAIL_PREFIX": "   │  └─ "}),
+            mock.patch.dict(module.os.environ, {"GITHOOK_LOG_DETAIL_PREFIX": "   │    └─ "}),
             contextlib.redirect_stdout(stdout),
         ):
             module.log(
@@ -94,7 +94,7 @@ class TranslateStagedArticlesHookTests(unittest.TestCase):
 
         self.assertEqual(
             stdout.getvalue(),
-            "   │  └─ [job] [1/1] outdated_translation personal-growth/example.md\n",
+            "   │    └─ [job] [1/1] outdated_translation personal-growth/example.md\n",
         )
 
 

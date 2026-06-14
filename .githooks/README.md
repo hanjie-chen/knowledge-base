@@ -88,9 +88,9 @@ When translations run, job details are rendered as child nodes under the current
 [pre-commit]
 └─ 20-translate-staged-articles.py
    ├─ [run] translate: 1 staged article(s) need translation
-   │  └─ [job] [1/1] outdated_translation personal-growth/example.md
+   │    └─ [job] [1/1] outdated_translation personal-growth/example.md
    ├─ [run] translate: starting 1 worker(s)
-   │  └─ [job] worker-1 [1/1] translating	personal-growth/example.md
+   │    └─ [job] worker-1 [1/1] translating	personal-growth/example.md
    └─ [add] translate: staged generated translations
 ```
 

@@ -137,7 +137,7 @@ class PreCommitRunnerTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         env = run.call_args.kwargs["env"]
         self.assertEqual(env["PYTHONIOENCODING"], "utf-8")
-        self.assertEqual(env["GITHOOK_LOG_DETAIL_PREFIX"], "   │  └─ ")
+        self.assertEqual(env["GITHOOK_LOG_DETAIL_PREFIX"], "   │    └─ ")
 
 
 if __name__ == "__main__":
