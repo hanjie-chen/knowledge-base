@@ -67,14 +67,15 @@ function Open-Smart {
         [string]$Path
     )
 
-    $Path = Resolve-Path $Path
+    $Path = (Resolve-Path -LiteralPath $Path).ProviderPath
 
-    if (Test-Path -Path $Path -PathType Container) {
+    if (Test-Path -LiteralPath $Path -PathType Container) {
         # It's a folder, open with normal size
         Start-Process -FilePath "explorer.exe" -ArgumentList $Path
     } else {
-        # It's a file, open maximized
-        Start-Process -FilePath $Path -WindowStyle Maximized
+        # Use cmd's start command so GUI apps do not stay attached to Windows Terminal.
+        $startLine = 'start "" /MAX "' + $Path + '"'
+        Start-Process -FilePath "cmd.exe" -ArgumentList @("/d", "/c", $startLine) -WindowStyle Hidden
     }
 }
 

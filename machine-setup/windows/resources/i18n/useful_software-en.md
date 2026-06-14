@@ -1,131 +1,133 @@
 ---
-Title: Additional Windows Software and Settings
-SourceBlob: 72f7e15e992130db390c11fd9f001dc7b9531a8c
+Title: Additional Windows Software and Software Settings
+SourceBlob: 12f70582bde3c06ccda056a5b2f15ee05eed82da
 ---
 
 ```
-BriefIntroduction: After reinstalling Windows and finishing the built-in system setup, there are still some extra apps worth downloading to make the system much smoother to use. I personally prefer open-source software whenever possible.
+BriefIntroduction: After reinstalling Windows and finishing the native system settings, there are some extra programs worth downloading to make the system feel smoother to use. I personally prefer open-source software.
 ```
 
 <!-- split -->
 
 # Before We Start
 
-I recently built a new PC, and to make it more pleasant to use, I downloaded some extra software. This article is meant to help me restore my computer to the style and setup I already like and am familiar with after reinstalling the system. It can also serve as a reference for others with similar needs.
+I recently built a new PC and downloaded some extra software to make it easier to use. This article is meant to help me restore the computer to the familiar style and setup I like after reinstalling the system. It may also serve as a reference for others with similar needs.
 
-# Windows Extra Software
+# Additional Windows Software
 
-Here is some of the software I am currently using to make Windows more pleasant to use.
+These are some programs I currently use to make Windows more convenient.
 
-| Software name                | Description                                                      |
-| ---------------------------- | ---------------------------------------------------------------- |
-| Clash-for-window             | Without this, I couldn't even download Chrome                    |
-| Chrome Brower                | Arguably the best browser on Earth, used to download other software |
-| 7-zip                        | An open-source compression and extraction tool for Windows       |
-| everything                   | Essential for finding files                                      |
-| Vmware-workstation           | Virtual machine software; I need one Windows 10 VM for galgames and one Linux VM for development |
-| PotPlayer                    | Video player                                                     |
-| Typora                       | A fantastic Markdown writing tool; I started with the free 0.7 version and eventually became a paying user |
-| YACReader                    | A great local comic reader that can also build a local comic library |
+| Software name                | Description                                                  |
+| ---------------------------- | ------------------------------------------------------------ |
+| Clash-for-window             | Without this, I cannot even download Chrome                  |
+| Chrome Browser               | The strongest browser on the planet, used to download other software |
+| 7-zip                        | Open-source compression and decompression software for Windows |
+| everything                   | Essential for finding files                                  |
+| Vmware-workstation           | Virtual machine software; I need one Windows 10 VM for playing galgames and one Linux VM for development |
+| PotPlayer                    | Video player                                                 |
+| Typora                       | A great Markdown writing tool. I started using it from the free 0.7 version and eventually became a paid user |
+| YACReader                    | A great local comic reader that can also create a local comic library |
 | Visual Studio code (VS code) | A lightweight code editor that works very well on both Windows and macOS |
-| Steam                        | Great for entertainment                                          |
-| Windows terminal             | An excellent terminal tool on Windows; pair it with oh-my-posh for the best experience |
-| Fliqlo                       | Desktop screensaver software                                     |
-| Mircosoft Todo List          | For setting daily tasks                                          |
-| Koodo Reader                 | An open-source reading app for Windows                           |
-| codex                        | A powerful tool that tries to help you solve almost any problem  |
-| rime                         | Weasel/Rime, an excellent input method                           |
+| Steam                        | Essential for entertainment                                  |
+| Windows terminal             | An excellent terminal tool for Windows; use it with oh-my-posh for the best experience |
+| Fliqlo                       | Desktop screensaver                                          |
+| Mircosoft Todo List          | Set daily tasks                                              |
+| Koodo Reader                 | Open-source reading software for Windows                     |
+| codex                        | A powerful tool that tries to help you solve any problem     |
+| rime                         | Weasel, an excellent input method                            |
+| python3                      | A dependency for writing small utilities, replacing anaconda3, which is too heavy |
+| git                          | Version control for notes and code, usually synced to GitHub |
 
 # Software Settings
 
 ## Rime
 
-When we use `fu pan` to try to type `复盘`, we find that it fails because of a bug (Traditional Chinese to Simplified Chinese conversion).
+When we use `fu pan` to try to type “复盘”, we may find that it fails because of a bug related to Traditional Chinese to Simplified Chinese conversion.
 
-We can place a `custom_phrase.txt` file in the user folder with the following content:
+We can create a `custom_phrase.txt` file in the user folder with the following content:
 
 ```txt
 复盘	fupan	100
 复盘	fp	100
 ```
 
-Note: the separators in the middle must be Tabs, not spaces.
+Note: the separator in the middle must be a Tab, not spaces.
 
 Then right-click Weasel and redeploy the service.
 
 ### Sync Backup
 
-The synchronization method officially recommended by Rime for multiple devices is to set `sync_dir` in `installation.yaml`, then use "Sync User Data".
+The official multi-device sync method recommended by Rime is to set `sync_dir` in `installation.yaml`, then use “Sync user data”.
 
-The official documentation is very clear: during synchronization, user dictionaries are generated/merged into `*.userdb.txt` snapshots, and non-auto-generated YAML and `.txt` files in the user folder are backed up one-way to the sync directory. Typical files in the sync directory include `installation.yaml`, `default.custom.yaml`, `weasel.custom.yaml`, and `*.userdb.txt`.
+The official documentation states this clearly: during sync, user dictionaries are generated or merged into `*.userdb.txt` snapshots, and non-auto-generated YAML and `.txt` files in the user folder are backed up one-way to the sync directory. Typical files in the sync directory include `installation.yaml`, `default.custom.yaml`, `weasel.custom.yaml`, and `*.userdb.txt`.
 
-1. Open `installation.yaml` in the user folder.
-2. Add a line like this:
+1. Open `installation.yaml` in the user folder
+2. Add a line, for example:
 
 ```yaml
 sync_dir: 'D:\OneDrive\backup\Rime\backup'
 ```
 
-1. Save it and redeploy.
-2. Run "Sync User Data" in Weasel.
+1. Save and redeploy
+2. Run “Sync user data” in Weasel
 
 Note: syncing user data includes two actions: pull + push.
 
-It first pulls the existing user dictionary snapshots from the sync directory and merges them into the current dictionary, then pushes the current user configuration and new dictionary snapshots back to the sync directory. If the sync directory is empty, it simply backs up the current configuration there; if it is not empty, it merges first and then backs up.
+It first pulls existing user dictionary snapshots from the sync directory and merges them into the current dictionary, then pushes the current user configuration and new dictionary snapshot back to the sync directory. If the sync directory is empty, it simply backs up the current configuration there; if it is not empty, it merges first and then backs up.
 
 ## Edge Settings
 
-Purpose: prevent search results from redirecting to `cn.bing.com`, and use the new Bing instead.
+Purpose: prevent searches from redirecting to `cn.bing.com`, and use New Bing instead.
 
-As the browser that comes with Windows, Edge may not always be as good as Chrome, but it is still sufficient for everyday use.
+As the browser bundled with Windows, Edge is sometimes not as good as Chrome, but it is still good enough for some everyday use.
 
-The first issue is that Bing forces the search region to China, which makes useful AI tools such as the new Bing unavailable.
+The first issue is that when searching with Bing, the region is forcibly set to China, which prevents access to useful AI tools such as New Bing.
 
-The reason lies in the search engine settings for the address bar. Go to Edge Settings --> Privacy, search, and services --> Address bar and search --> Manage search engines, as shown below.
+The cause is the search engine setting for the search bar. Go to Edge Settings --> Privacy, search, and services --> Address bar and search --> Manage search engines, as shown below.
 
 ![search-engine-preview](./resources/images/search-engine-preview.png)
 
-You only need to modify the query URL (add a new one again and set it as default).
+Just modify the query URL, or add a new one and set it as the default.
 
 ![search-engine-current](./resources/images/search-engine-current.png)
 
-After that, it should work. I referred to this article[^1].
+That is all. I referenced this article[^1].
 
 1. Vertical tabs
 
    <img src="./resources/images/vertical-tab.png" alt="picture" style="zoom:60%;" />
 
-2. Hide the title bar
+2. Hide title bar
 
    <img src="./resources/images/hidden-tablename.png" alt="picture" style="zoom:60%;" />
 
 3. Other settings
 
-   You can explore the other homepage settings yourself.
+   You can explore other homepage settings yourself.
 
 ## Fliqlo Settings
 
-Purpose: use a global shortcut key to start the desktop screensaver (note that this does not work when software is in full-screen mode).
+Purpose: use a global shortcut key to launch the desktop screensaver. Note that it does not work when software is in fullscreen mode.
 
-### Method 1: Pin the Fliqlo shortcut to the Start menu
+### Method 1: Pin the Fliqlo Shortcut to the Start Menu
 
-1. Create a Fliqlo shortcut and place it on the desktop.
-2. Open the Start menu folder. This folder is usually located at `C:\ProgramData\Microsoft\Windows\Start Menu\Programs`. Drag the shortcut into it (administrator permission is required).
-3. Open the Start menu, find the Fliqlo shortcut, right-click it, and pin it to Start.
+1. Create a Fliqlo shortcut and place it on the desktop
+2. Open the Start Menu folder. This folder is usually located at `C:\ProgramData\Microsoft\Windows\Start Menu\Programs`. Drag the shortcut into it; administrator permission is required
+3. Open the Start Menu, find the Fliqlo shortcut, right-click it, and pin it to Start
 
-### Method 2: Create a desktop shortcut directly, then assign a shortcut key
+### Method 2: Create a Desktop Shortcut Directly and Set a Shortcut Key
 
-1. Note that with this method, you cannot hide the desktop shortcut. Otherwise, the shortcut key will not work the next time you try to launch it. This method leaves a shortcut on the desktop, and since I prefer a cleaner desktop, I abandoned this option.
+1. Note that this method cannot hide the desktop shortcut. Otherwise, after the next startup, the shortcut key will no longer work. This approach leaves a shortcut on the desktop, but I prefer a clean desktop, so I gave up on this solution
 
 
 
 ## Windows Terminal Optimization
 
-Purpose: improve the terminal appearance and enable the terminal's built-in administrator privileges.
+Purpose: beautify the terminal and enable built-in administrator privileges for the terminal.
 
-I mainly use the [oh-my-posh](https://ohmyposh.dev/) theme to improve Windows Terminal.
+The main approach is to use the [oh-my-posh](https://ohmyposh.dev/) theme to optimize Windows Terminal.
 
-Then there are some Windows Terminal beautification settings and command-line completion features[^2].
+Then there are some Windows Terminal visual improvements and command-line completion settings[^2].
 
 ```josn
         "defaults": {
@@ -137,9 +139,9 @@ Then there are some Windows Terminal beautification settings and command-line co
         },
 ```
 
-You can check the reference video for details.
+For details, see the reference video.
 
-Then there is enabling administrator privileges by default, using the `elevate` property so it always opens as administrator[^3], and setting the default startup directory to the project folder `E:\\Personal_Project`.
+Next is enabling administrator privileges by default. Use the `elevate` property so it opens automatically as administrator[^3]. Also, set the startup directory to the project folder by default: `E:\\Personal_Project`.
 
 The JSON code is as follows:
 
@@ -160,17 +162,17 @@ The JSON code is as follows:
 
 Purpose: make the player easier to use.
 
-This software has far too many settings, but the most important ones are hardware decoding (H/W, GPU decoding) and software decoding (CPU decoding).
+This software has far too many configurable options. The most important ones are hardware decoding, or H/W GPU decoding, and software decoding, or CPU decoding.
 
 See the reference video for details[^4].
 
 # Visio
 
-Download and activation: [Microsoft Visio 专业版 2019_visio 2019-CSDN博客](https://blog.csdn.net/milkhq/article/details/105714076)
+Download and activation: [Microsoft Visio Professional 2019_visio 2019-CSDN Blog](https://blog.csdn.net/milkhq/article/details/105714076)
 
-# Reference
+# References
 
-[^1]: [how to setting the edge search bar](https://answers.microsoft.com/zh-hans/microsoftedge/forum/all/edge使用必应搜/6637cc55-5366-4a01-adc3-fd5db4b666fd)
-[^2]: [【教程】终端美化 Windows Terminal+oh-my-posh美化_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Qa411T7Au/?spm_id_from=333.337.search-card.all.click&vd_source=617c4a2b4e326fc6b6269aada0d25986)
-[^3]: [Windows Terminal打开管理员权限的PowerShell - Cyber-Cynic - 博客园 (cnblogs.com)](https://www.cnblogs.com/talentzemin/p/15930400.html)
-[^4]:[能看电视，能摸鱼！超强播放器 PotPlayer 使用指南&技巧分享_哔哩哔哩_bilibili](https://www.bilibili.com/video/BV1Tx4y1X7Fh/?spm_id_from=333.337.search-card.all.click&vd_source=617c4a2b4e326fc6b6269aada0d25986)
+[^1]: [How to set the Edge search bar](https://answers.microsoft.com/zh-hans/microsoftedge/forum/all/edge使用必应搜/6637cc55-5366-4a01-adc3-fd5db4b666fd)
+[^2]: [Tutorial: Beautifying Windows Terminal with Windows Terminal + oh-my-posh_Bilibili](https://www.bilibili.com/video/BV1Qa411T7Au/?spm_id_from=333.337.search-card.all.click&vd_source=617c4a2b4e326fc6b6269aada0d25986)
+[^3]: [Open PowerShell with Administrator Privileges in Windows Terminal - Cyber-Cynic - cnblogs.com](https://www.cnblogs.com/talentzemin/p/15930400.html)
+[^4]:[Watch TV and Slack Off! A Powerful PotPlayer Usage Guide and Tips_Bilibili](https://www.bilibili.com/video/BV1Tx4y1X7Fh/?spm_id_from=333.337.search-card.all.click&vd_source=617c4a2b4e326fc6b6269aada0d25986)

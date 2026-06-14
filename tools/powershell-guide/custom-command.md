@@ -15,13 +15,15 @@ personal windows powershell command, for my convinence
 
 ![cover](./resources/images/cover_image.webp)
 
-# How to use these customize commands
+# How to use these custom commands
 
-add this command in the powershell `$PROFILE` and then `. $PROFILR` to reload the file, youcan use these commands
+Add these commands to the PowerShell `$PROFILE`, and then run `. $PROFILE` to reload the file. After that, you can use these commands.
 
 # Command `open`
 
-it will open a file with maximized windows, but if it open a folder, it use default size.
+It opens a file in a maximized window, but if it opens a folder, it uses the default Explorer window size.
+
+For files, use `cmd /c start` instead of directly starting the file path from PowerShell. Some GUI apps, such as Typora or other Electron/Chromium-based apps, can stay attached to the Windows Terminal console session when launched through file association. If Windows Terminal is closed, those apps may close with it. `cmd /c start` makes the launch closer to double-clicking the file from Explorer.
 
 ```powershell
 # Custom aliases created by Plain 2024-09-19
@@ -31,14 +33,15 @@ function Open-Smart {
         [string]$Path
     )
 
-    $Path = Resolve-Path $Path
+    $Path = (Resolve-Path -LiteralPath $Path).ProviderPath
 
-    if (Test-Path -Path $Path -PathType Container) {
+    if (Test-Path -LiteralPath $Path -PathType Container) {
         # It's a folder, open with normal size
         Start-Process -FilePath "explorer.exe" -ArgumentList $Path
     } else {
-        # It's a file, open maximized
-        Start-Process -FilePath $Path -WindowStyle Maximized
+        # Use cmd's start command so GUI apps do not stay attached to Windows Terminal.
+        $startLine = 'start "" /MAX "' + $Path + '"'
+        Start-Process -FilePath "cmd.exe" -ArgumentList @("/d", "/c", $startLine) -WindowStyle Hidden
     }
 }
 
@@ -175,4 +178,3 @@ foreach ($extension in $colors.Keys) {
     $PSStyle.FileInfo.Extension[$extension] = $colors[$extension]
 }
 ```
-

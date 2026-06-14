@@ -41,6 +41,8 @@ BriefIntroduction:
 | Koodo Reader                 | windows开源阅读软件                                          |
 | codex                        | 尝试帮你解决任何问题的神器                                   |
 | rime                         | 小狼毫，输入法神器                                           |
+| python3                      | 写一些小东西的依赖，代替 anaconda3（太笨重了）               |
+| git                          | 写笔记和代码的版本控制，一般同步到 githu                     |
 
 # Software Setting
 
