@@ -9,10 +9,13 @@ from pathlib import Path
 
 def log(status: str, message: str, *, stream=None, detail: bool = False, last: bool = False) -> None:
     if detail:
-        prefix_name = "GITHOOK_LOG_DETAIL_PREFIX"
+        prefix = os.environ.get(
+            "GITHOOK_LOG_DETAIL_LAST_PREFIX" if last else "GITHOOK_LOG_DETAIL_ITEM_PREFIX",
+            os.environ.get("GITHOOK_LOG_DETAIL_PREFIX", ""),
+        )
     else:
         prefix_name = "GITHOOK_LOG_LAST_PREFIX" if last else "GITHOOK_LOG_ITEM_PREFIX"
-    prefix = os.environ.get(prefix_name, "")
+        prefix = os.environ.get(prefix_name, "")
     label = "" if detail else "translate: "
     print(f"{prefix}[{status}] {label}{message}", file=stream or sys.stdout, flush=True)
 
@@ -97,16 +100,26 @@ def main() -> int:
     log("run", f"{total} staged article(s) need translation")
     for index, candidate in indexed_candidates:
         relative_source = candidate.source_md.relative_to(root_dir).as_posix()
-        log("job", f"[{index}/{total}] {candidate.status} {relative_source}", detail=True)
+        log(
+            "job",
+            f"[{index}/{total}] {candidate.status} {relative_source}",
+            detail=True,
+            last=index == total,
+        )
 
     worker_count = worker_count_for(total)
     log("run", f"starting {worker_count} worker(s)")
+    detail_last_prefix = os.environ.get(
+        "GITHOOK_LOG_DETAIL_LAST_PREFIX",
+        os.environ.get("GITHOOK_LOG_DETAIL_PREFIX", ""),
+    )
     results = run_translation_jobs(
         repo_root=root_dir,
         indexed_candidates=indexed_candidates,
         worker_count=worker_count,
         model=model,
-        log_prefix=f"{os.environ.get('GITHOOK_LOG_DETAIL_PREFIX', '')}[job] ",
+        log_prefix=f"{os.environ.get('GITHOOK_LOG_DETAIL_ITEM_PREFIX', '')}[job] ",
+        log_last_prefix=f"{detail_last_prefix}[job] ",
     )
 
     success_count = 0

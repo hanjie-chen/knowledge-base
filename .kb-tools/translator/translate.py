@@ -41,6 +41,7 @@ def run_translation_jobs(
     worker_count: int,
     model: str | None,
     log_prefix: str = "",
+    log_last_prefix: str | None = None,
 ) -> list[TranslationResult]:
     total = len(indexed_candidates)
     task_queue: Queue[tuple[int, object]] = Queue()
@@ -49,11 +50,19 @@ def run_translation_jobs(
 
     print_lock = Lock()
     results_lock = Lock()
+    event_lock = Lock()
+    expected_events = total * 2
+    logged_events = 0
     results: list[TranslationResult] = []
 
     def log(message: str, *, stream=None) -> None:
+        nonlocal logged_events
+        with event_lock:
+            logged_events += 1
+            is_last_event = logged_events == expected_events
+        prefix = log_last_prefix if is_last_event and log_last_prefix is not None else log_prefix
         with print_lock:
-            print(f"{log_prefix}{message}", file=stream or sys.stdout)
+            print(f"{prefix}{message}", file=stream or sys.stdout)
 
     def worker(worker_id: int) -> None:
         while True:
@@ -63,7 +72,7 @@ def run_translation_jobs(
                 return
 
             relative_source = candidate.source_md.relative_to(repo_root).as_posix()
-            log(f"worker-{worker_id} [{index}/{total}] translating\t{relative_source}")
+            log(f"worker-{worker_id} [{index}/{total}] translating: {relative_source}")
             try:
                 translation_path = translate_candidate(
                     repo_root=repo_root,
@@ -72,7 +81,7 @@ def run_translation_jobs(
                 )
             except Exception as exc:  # noqa: BLE001
                 log(
-                    f"worker-{worker_id} [{index}/{total}] failed\t{relative_source}\t{exc}",
+                    f"worker-{worker_id} [{index}/{total}] failed: {relative_source}: {exc}",
                     stream=sys.stderr,
                 )
                 result = TranslationResult(
@@ -83,7 +92,7 @@ def run_translation_jobs(
                 )
             else:
                 relative_translation = translation_path.relative_to(repo_root).as_posix()
-                log(f"worker-{worker_id} [{index}/{total}] translated\t{relative_translation}")
+                log(f"worker-{worker_id} [{index}/{total}] translated: {relative_translation}")
                 result = TranslationResult(
                     index=index,
                     source_path=relative_source,
@@ -160,7 +169,7 @@ def main() -> int:
     indexed_candidates = list(enumerate(candidates, start=1))
     for index, candidate in indexed_candidates:
         relative_source = candidate.source_md.relative_to(repo_root).as_posix()
-        print(f"[{index}] {candidate.status}\t{relative_source}")
+        print(f"[{index}] {candidate.status}: {relative_source}")
 
     worker_count = min(max(args.jobs, 1), total)
     print_subsection(f"Starting {worker_count} worker(s)")

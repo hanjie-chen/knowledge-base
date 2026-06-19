@@ -284,16 +284,60 @@ class TranslateArticlesTest(unittest.TestCase):
         output = stdout.getvalue()
         self.assertEqual(exit_code, 0)
         self.assertIn("Found 2 candidate(s)", output)
-        self.assertIn("[1] missing_translation\ttopic/first.md", output)
-        self.assertIn("[2] outdated_translation\ttopic/second.md", output)
+        self.assertIn("[1] missing_translation: topic/first.md", output)
+        self.assertIn("[2] outdated_translation: topic/second.md", output)
         self.assertIn("Starting 2 worker(s)", output)
         self.assertIn("worker-", output)
-        self.assertIn("[1/2] translating\ttopic/first.md", output)
-        self.assertIn("[2/2] translating\ttopic/second.md", output)
-        self.assertIn("[1/2] translated\ttopic/resources/i18n/first-en.md", output)
-        self.assertIn("[2/2] translated\ttopic/resources/i18n/second-en.md", output)
+        self.assertIn("[1/2] translating: topic/first.md", output)
+        self.assertIn("[2/2] translating: topic/second.md", output)
+        self.assertIn("[1/2] translated: topic/resources/i18n/first-en.md", output)
+        self.assertIn("[2/2] translated: topic/resources/i18n/second-en.md", output)
+        self.assertNotIn("\t", output)
         self.assertIn("Finished", output)
         self.assertIn("success: 2", output)
+
+    def test_run_translation_jobs_uses_item_and_last_prefixes_for_worker_logs(self):
+        repo_root = Path("/tmp/repo").resolve()
+        candidates = [
+            kb_translation.Candidate(
+                source_md=repo_root / "topic" / "first.md",
+                status="missing_translation",
+            ),
+            kb_translation.Candidate(
+                source_md=repo_root / "topic" / "second.md",
+                status="outdated_translation",
+            ),
+        ]
+
+        with mock.patch.object(
+            translate_cli,
+            "translate_candidate",
+            side_effect=[
+                repo_root / "topic" / "resources" / "i18n" / "first-en.md",
+                repo_root / "topic" / "resources" / "i18n" / "second-en.md",
+            ],
+        ):
+            stdout = io.StringIO()
+            with redirect_stdout(stdout):
+                results = translate_cli.run_translation_jobs(
+                    repo_root=repo_root,
+                    indexed_candidates=list(enumerate(candidates, start=1)),
+                    worker_count=1,
+                    model=None,
+                    log_prefix="   │    ├─ [job] ",
+                    log_last_prefix="   │    └─ [job] ",
+                )
+
+        self.assertEqual(len(results), 2)
+        self.assertEqual(
+            stdout.getvalue().splitlines(),
+            [
+                "   │    ├─ [job] worker-1 [1/2] translating: topic/first.md",
+                "   │    ├─ [job] worker-1 [1/2] translated: topic/resources/i18n/first-en.md",
+                "   │    ├─ [job] worker-1 [2/2] translating: topic/second.md",
+                "   │    └─ [job] worker-1 [2/2] translated: topic/resources/i18n/second-en.md",
+            ],
+        )
 
     def test_main_passes_force_to_candidate_finder(self):
         repo_root = Path("/tmp/repo").resolve()

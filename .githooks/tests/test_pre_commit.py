@@ -80,7 +80,7 @@ class PreCommitRunnerTests(unittest.TestCase):
             [
                 "[pre-commit]",
                 "├─ 10-first.py",
-                "[pre-commit] failed: 10-first.py exited with status 1",
+                "│  └─ [fail] hook: exited with status 1",
             ],
         )
 
@@ -137,7 +137,37 @@ class PreCommitRunnerTests(unittest.TestCase):
         self.assertEqual(exit_code, 0)
         env = run.call_args.kwargs["env"]
         self.assertEqual(env["PYTHONIOENCODING"], "utf-8")
-        self.assertEqual(env["GITHOOK_LOG_DETAIL_PREFIX"], "   │    └─ ")
+        self.assertEqual(env["GITHOOK_LOG_DETAIL_ITEM_PREFIX"], "   │    ├─ ")
+        self.assertEqual(env["GITHOOK_LOG_DETAIL_LAST_PREFIX"], "   │    └─ ")
+
+    def test_renders_failed_script_status_inside_tree(self):
+        module = load_module()
+        scripts = [
+            Path(".githooks/pre-commit.d/10-first.py"),
+            Path(".githooks/pre-commit.d/20-second.py"),
+        ]
+        stdout = io.StringIO()
+
+        with (
+            mock.patch.object(module, "iter_hook_scripts", return_value=scripts),
+            mock.patch.object(
+                module.subprocess,
+                "run",
+                return_value=subprocess.CompletedProcess([], 1),
+            ),
+            contextlib.redirect_stdout(stdout),
+        ):
+            exit_code = module.main()
+
+        self.assertEqual(exit_code, 1)
+        self.assertEqual(
+            stdout.getvalue().strip().splitlines(),
+            [
+                "[pre-commit]",
+                "├─ 10-first.py",
+                "│  └─ [fail] hook: exited with status 1",
+            ],
+        )
 
 
 if __name__ == "__main__":

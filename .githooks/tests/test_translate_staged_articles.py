@@ -78,23 +78,89 @@ class TranslateStagedArticlesHookTests(unittest.TestCase):
         with mock.patch.dict(module.os.environ, {"KB_TRANSLATOR_JOBS": "10"}):
             self.assertEqual(module.worker_count_for(3), 3)
 
-    def test_detail_logs_render_as_child_nodes(self):
+    def test_detail_logs_render_as_item_and_last_child_nodes(self):
         module = load_module()
         stdout = io.StringIO()
 
         with (
-            mock.patch.dict(module.os.environ, {"GITHOOK_LOG_DETAIL_PREFIX": "   │    └─ "}),
+            mock.patch.dict(
+                module.os.environ,
+                {
+                    "GITHOOK_LOG_DETAIL_ITEM_PREFIX": "   │    ├─ ",
+                    "GITHOOK_LOG_DETAIL_LAST_PREFIX": "   │    └─ ",
+                },
+            ),
             contextlib.redirect_stdout(stdout),
         ):
             module.log(
                 "job",
-                "[1/1] outdated_translation personal-growth/example.md",
+                "[1/2] outdated_translation personal-growth/first.md",
                 detail=True,
+            )
+            module.log(
+                "job",
+                "[2/2] missing_translation personal-growth/second.md",
+                detail=True,
+                last=True,
             )
 
         self.assertEqual(
             stdout.getvalue(),
-            "   │    └─ [job] [1/1] outdated_translation personal-growth/example.md\n",
+            (
+                "   │    ├─ [job] [1/2] outdated_translation personal-growth/first.md\n"
+                "   │    └─ [job] [2/2] missing_translation personal-growth/second.md\n"
+            ),
+        )
+
+    def test_main_renders_multiple_candidate_jobs_as_item_and_last_nodes(self):
+        module = load_module()
+        root_dir = Path("/repo")
+        candidates = [
+            types.SimpleNamespace(source_md=root_dir / "first.md", status="outdated_translation"),
+            types.SimpleNamespace(source_md=root_dir / "second.md", status="missing_translation"),
+        ]
+        stdout = io.StringIO()
+
+        def run_translation_jobs(**kwargs):
+            return [
+                types.SimpleNamespace(translation_path="resources/i18n/first-en.md", error=None),
+                types.SimpleNamespace(translation_path="resources/i18n/second-en.md", error=None),
+            ]
+
+        with (
+            mock.patch.object(module, "repo_root", return_value=root_dir),
+            mock.patch.object(
+                module,
+                "load_translator",
+                return_value=(
+                    RuntimeError,
+                    lambda root, limit: candidates,
+                    lambda root: [],
+                    run_translation_jobs,
+                ),
+            ),
+            mock.patch.object(module, "git_add"),
+            mock.patch.dict(
+                module.os.environ,
+                {
+                    "GITHOOK_LOG_ITEM_PREFIX": "   ├─ ",
+                    "GITHOOK_LOG_LAST_PREFIX": "   └─ ",
+                    "GITHOOK_LOG_DETAIL_ITEM_PREFIX": "   │    ├─ ",
+                    "GITHOOK_LOG_DETAIL_LAST_PREFIX": "   │    └─ ",
+                },
+                clear=True,
+            ),
+            contextlib.redirect_stdout(stdout),
+        ):
+            exit_code = module.main()
+
+        self.assertEqual(exit_code, 0)
+        self.assertIn(
+            (
+                "   │    ├─ [job] [1/2] outdated_translation first.md\n"
+                "   │    └─ [job] [2/2] missing_translation second.md\n"
+            ),
+            stdout.getvalue(),
         )
 
 

@@ -87,11 +87,24 @@ When translations run, job details are rendered as child nodes under the current
 ```text
 [pre-commit]
 └─ 20-translate-staged-articles.py
-   ├─ [run] translate: 1 staged article(s) need translation
-   │    └─ [job] [1/1] outdated_translation personal-growth/example.md
-   ├─ [run] translate: starting 1 worker(s)
-   │    └─ [job] worker-1 [1/1] translating	personal-growth/example.md
+   ├─ [run] translate: 2 staged article(s) need translation
+   │    ├─ [job] [1/2] outdated_translation personal-growth/first.md
+   │    └─ [job] [2/2] missing_translation personal-growth/second.md
+   ├─ [run] translate: starting 2 worker(s)
+   │    ├─ [job] worker-1 [1/2] translating: personal-growth/first.md
+   │    ├─ [job] worker-1 [1/2] translated: personal-growth/resources/i18n/first-en.md
+   │    ├─ [job] worker-2 [2/2] translating: personal-growth/second.md
+   │    └─ [job] worker-2 [2/2] translated: personal-growth/resources/i18n/second-en.md
    └─ [add] translate: staged generated translations
+```
+
+If a hook exits with a hard failure before creating its own detailed message, the runner renders
+the exit status as a child node under the failed script:
+
+```text
+[pre-commit]
+├─ 10-normalize-image-extensions.py
+│  └─ [fail] hook: exited with status 1
 ```
 
 ## Tests
