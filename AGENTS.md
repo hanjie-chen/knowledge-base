@@ -2,19 +2,16 @@
 
 ## Read First
 
-- Before creating, moving, or modifying content, read the project root `README.md`.
+Before creating, moving, or modifying content:
 
-## Directory README
-
-- Before working in a topic directory, read its `README.md` if present; otherwise read the nearest relevant parent `README.md`.
+1. Read the project root `README.md`.
+2. Read the nearest `README.md` on the target path, if one exists below the project root.
 
 ## When Writing or Revising Articles
 
-- Article title is stored in the YAML front matter `Title` field.
-- Do not add a Markdown `#` heading only to repeat the article title.
+- Store the article title in the YAML front matter `Title` field; do not add a Markdown `#` heading only to repeat it.
 - In article bodies, `#` headings are normal top-level sections and may appear multiple times.
-- Use only `#`, `##`, and `###` heading levels in articles.
-- Do not use `####`, `#####`, or deeper heading levels.
+- Use only `#`, `##`, and `###` heading levels in article bodies.
 - Prefer English for Markdown `#`, `##`, and `###` headings whenever practical.
 - Headings should stay short and descriptive.
 - Body content can be Chinese, English, or mixed, depending on what explains the topic most clearly.
@@ -23,12 +20,8 @@
 
 ## When Placing or Naming Articles
 
-- Treat directory paths as taxonomy.
-- Each path segment should represent a narrower topic classification.
-- Choose the path by subject area first, then choose a concise file name.
-- Prefer English file names.
-- Use lowercase letters.
-- Separate words with hyphens (`-`).
+- Treat directory paths as taxonomy: choose the path by subject area, with each path segment representing a narrower topic classification.
+- Choose concise English file names using lowercase letters and hyphens (`-`) between words.
 - Keep file names short. Let the directory path carry as much context as possible.
 - Avoid repeating parent directory information in the file name.
 

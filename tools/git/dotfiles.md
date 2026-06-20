@@ -1,3 +1,5 @@
+git 有一些 `.` 开头的文件，比如说 `.git`
+
 # .gitignore file
 
 有时候我们并不需要所有的文件都提交到 remote repo 中去，比如说 python 程序运行时，产生的临时文件（ `__pycache__` ）我们并不希望这些临时文件被提交
