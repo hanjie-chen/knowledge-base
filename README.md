@@ -10,7 +10,7 @@
 这个仓库主要做两件事：
 
 - 作为个人知识库，持续整理可复用的知识、经验和笔记
-- 作为网站内容仓库，为博客或文档站点提供可发布的内容来源
+- 作为网站内容仓库，为博客提供可发布的内容来源
 
 ## How To Navigate
 
@@ -93,6 +93,6 @@ codex exec
 
 ## Publishing
 
-Git push  会出发 github action 的检测规则，如果改动了那么满足发布标准的文章，那么就会触发网站同步。
+Git push  会触发 github action 的检测规则，如果改动了那么满足发布标准的文章，那么就会触发网站同步。
 
 具体规则见 `.kb-tools/website_sync/` 和 `.github/workflows/`。
