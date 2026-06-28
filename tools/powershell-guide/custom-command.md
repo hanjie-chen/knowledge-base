@@ -1,5 +1,5 @@
 ---
-Title: Personal Windows PS Command
+Title: PowerShell Custom Commands
 Author: 陈翰杰
 Instructor: Sonnet 3.5, chatgpt-4o
 CoverImage: ./resources/images/cover_image.webp
@@ -8,173 +8,77 @@ RolloutDate: 2024-09-19
 
 ```
 BriefIntroduction: 
-personal windows powershell command, for my convinence
+PowerShell custom commands usage note.
 ```
 
 <!-- split -->
 
 ![cover](./resources/images/cover_image.webp)
 
-# How to use these custom commands
+# Profile Source of Truth
 
-Add these commands to the PowerShell `$PROFILE`, and then run `. $PROFILE` to reload the file. After that, you can use these commands.
+这些 custom commands 来自我的 PowerShell `$PROFILE`。
+
+现在 `$PROFILE` 不再直接作为知识库文章维护，而是由 [personal-config](https://github.com/hanjie-chen/personal-config) 统一管理。实际代码维护在：
+
+```text
+personal-config/powershell/Microsoft.PowerShell_profile.ps1
+```
+
+本机的 PowerShell 7 profile 通过 symbolic link 指向这个文件：
+
+```text
+$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1
+```
+
+因此，这篇文章只记录这些命令的用途和常见用法，不再复制完整实现。需要修改实现时，应修改 `personal-config` 中的 profile 文件。
 
 # Command `open`
 
-It opens a file in a maximized window, but if it opens a folder, it uses the default Explorer window size.
+`open` 用来从 PowerShell 打开文件或目录。
 
-For files, use `cmd /c start` instead of directly starting the file path from PowerShell. Some GUI apps, such as Typora or other Electron/Chromium-based apps, can stay attached to the Windows Terminal console session when launched through file association. If Windows Terminal is closed, those apps may close with it. `cmd /c start` makes the launch closer to double-clicking the file from Explorer.
+打开目录时，它会使用 Windows Explorer；打开文件时，它会尽量模拟从 Explorer 双击文件的行为，避免某些 GUI app 因为仍然附着在 Windows Terminal session 上而在终端关闭后一起退出。
+
+常见用法：
 
 ```powershell
-# Custom aliases created by Plain 2024-09-19
-function Open-Smart {
-    param (
-        [Parameter(Mandatory=$true)]
-        [string]$Path
-    )
-
-    $Path = (Resolve-Path -LiteralPath $Path).ProviderPath
-
-    if (Test-Path -LiteralPath $Path -PathType Container) {
-        # It's a folder, open with normal size
-        Start-Process -FilePath "explorer.exe" -ArgumentList $Path
-    } else {
-        # Use cmd's start command so GUI apps do not stay attached to Windows Terminal.
-        $startLine = 'start "" /MAX "' + $Path + '"'
-        Start-Process -FilePath "cmd.exe" -ArgumentList @("/d", "/c", $startLine) -WindowStyle Hidden
-    }
-}
-
-# Set alias 'open' for the custom function
-Set-Alias -Name open -Value Open-Smart
+open .
+open .\notes.md
+open .\some-folder
 ```
+
+我通常用它来快速打开当前目录、Markdown 文件，或者需要用默认 app 查看和编辑的文件。
 
 # Command `touch`
 
-it will like Linux comamnd `touch` if there no file, it will created one, if have file, it will renew the timestamp
+`touch` 模拟 Linux 中的 `touch` 命令。
+
+如果文件不存在，它会创建一个新文件；如果文件已经存在，它会更新文件的 `LastWriteTime`。
+
+常见用法：
 
 ```powershell
-# custom command created by Plain 2024-09-23
-function Touch-File {
-    param(
-        [Parameter(Mandatory=$true, Position=0, ValueFromPipeline=$true)]
-        [string[]]$Path
-    )
-
-    foreach ($file in $Path) {
-        if (Test-Path -Path $file) {
-            # File exists, update its timestamp
-            (Get-Item $file).LastWriteTime = Get-Date
-            Write-Host "Updated timestamp: $file"
-        }
-        else {
-            # File doesn't exist, create it
-            New-Item -ItemType File -Path $file | Out-Null
-            Write-Host "Created new file: $file"
-        }
-    }
-}
-
-Set-Alias -Name touch -Value Touch-File
+touch note.md
+touch .env
+touch a.txt b.txt
 ```
+
+这个命令适合用在临时创建文件、初始化 Markdown 笔记、或者快速刷新文件时间戳的时候。
 
 # Command `tree`
 
-Linux like command tree, to instead of the powershell nature `tree`
+`tree` 用来显示当前目录下的文件树。
 
-use `tree -DirectoriesOnly` to show directories
+它会覆盖 PowerShell 原本的 `tree` command，并支持一些更适合日常使用的参数，例如只显示目录，或者忽略指定目录。
 
-use `tree -Ignore "images", "image"` to ignore some folder
-
-```powershell
-# Linux-like tree command, added by Plain in 2024-11-15
-# modified in 2025-04-24, add Ingore parameter
-function Show-TreeWithFiles {
-    param (
-        [string]$Path = ".",
-        [string]$Indent = "",
-        [bool]$IsLast = $true,
-        [switch]$DirectoriesOnly, # 新增参数，使用 switch 类型便于命令行使用
-        [string[]]$Ignore  # 新增 Ignore 参数
-    )
-
-    # 根据 DirectoriesOnly 参数决定是否只获取目录
-    $items = if ($DirectoriesOnly) {
-        Get-ChildItem -Path $Path | Where-Object { $_.PSIsContainer }
-    } else {
-        Get-ChildItem -Path $Path
-    }
-    # 如果指定 Ignore，过滤掉匹配的文件夹
-    if ($Ignore) {
-        $items = $items | Where-Object { $Ignore -notcontains $_.Name }
-    }
-    
-    $count = $items.Count
-    $current = 0
-
-    foreach ($item in $items) {
-        $current++
-        $isLastItem = ($current -eq $count)
-        $prefix = if ($Indent -eq "") {
-            if ($isLastItem) { "└───" } else { "├───" }
-        } else {
-            if ($isLastItem) { "$Indent└───" } else { "$Indent├───" }
-        }
-
-        # 使用 Write-Host 的 -NoNewline 参数来分段输出
-        Write-Host "$prefix" -NoNewline
-
-        # 使用 $PSStyle.FileInfo 的颜色设置
-        if ($item.PSIsContainer) {
-            # 目录使用 Directory 的颜色设置
-            Write-Host ($PSStyle.FileInfo.Directory + $item.Name + $PSStyle.Reset)
-        } else {
-            # 文件使用对应扩展名的颜色设置
-            $extension = $item.Extension.ToLower()
-            $colorCode = $PSStyle.FileInfo.Extension[$extension]
-            if ($colorCode) {
-                Write-Host ($colorCode + $item.Name + $PSStyle.Reset)
-            } else {
-                # 如果没有定义颜色，使用默认颜色
-                Write-Host $item.Name
-            }
-        }
-
-        if ($item.PSIsContainer) {
-            $newIndent = if ($Indent -eq "") {
-                if ($isLastItem) { "    " } else { "│   " }
-            } else {
-                if ($isLastItem) { "$Indent    " } else { "$Indent│   " }
-            }
-            Show-TreeWithFiles -Path $item.FullName -Indent $newIndent -IsLast $isLastItem -DirectoriesOnly:$DirectoriesOnly -Ignore:$Ignore
-        }
-    }
-}
-
-# 创建别名，使用 -Force 参数覆盖原有的 tree 命令
-Set-Alias -Name tree -Value Show-TreeWithFiles -Force
-```
-
-the color for the tree result
+常见用法：
 
 ```powershell
-# add by Plain in 2024-10-05
-$PSStyle.FileInfo.Directory = "`e[34;1m"  # bule bold for directory
-$PSStyle.FileInfo.SymbolicLink = "`e[36;1m" 
-$PSStyle.FileInfo.Executable = "`e[32;1m"  # green boldfor exe file
-
-# seeting color for differnet file
-$colors = @{
-    ".txt" = "`e[33m"  # yellow
-    ".log" = "`e[31m"  # red
-    ".ps1" = "`e[36m"  
-    ".exe" = "`e[32m"  # green
-    ".json" = "`e[35m"  
-    ".yml" = "`e[35m"  
-    ".md" = "`e[33m"   # yellow
-}
-# apply it to color
-foreach ($extension in $colors.Keys) {
-    $PSStyle.FileInfo.Extension[$extension] = $colors[$extension]
-}
+tree
+tree -DirectoriesOnly
+tree -Ignore "resources", "images"
 ```
+
+其中 `-DirectoriesOnly` 只显示目录，`-Ignore` 用来跳过不想看的目录或文件名。
+
+这个命令还会配合 `$PSStyle.FileInfo` 给目录、symbolic link、executable file 和部分常见文件扩展名设置颜色，让目录结构更容易扫描。
