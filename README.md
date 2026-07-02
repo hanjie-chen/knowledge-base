@@ -1,16 +1,9 @@
 # Knowledge Base
 
-这是我的个人知识库，用来整理文章、笔记和可复用的知识，同时作为个人网站的内容来源。
+这是我的个人知识库，持续整理可复用的知识、经验和笔记，同时作为个人网站的内容来源。
 
 - 个人网站：https://hanjie-chen.com/
 - 网站源码：https://github.com/hanjie-chen/website
-
-## What This Repository Is
-
-这个仓库主要做两件事：
-
-- 作为个人知识库，持续整理可复用的知识、经验和笔记
-- 作为网站内容仓库，为博客提供可发布的内容来源
 
 ## How To Navigate
 
