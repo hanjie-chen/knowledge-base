@@ -23,11 +23,9 @@ claude doctor
 claude update
 ```
 
-# 使用指南（claude code terminal）
+# 使用指南（claude code cli）
 
-## command
-
-/model: 切换模型和思考强度
+## 常用command
 
 /exit: 退出对话
 
@@ -70,7 +68,7 @@ ctrl + u: 删除整行输入
 }
 ```
 
-这样 Claude Code 启动时会注入这两个环境变量，WebFetch 等网络工具就会走代理。
+这样 Claude Code 启动时会注入这两个环境变量，WebFetch 等网络工具就会走代理。如何使用了这个设置，那么平时的 claude code 链接api也会走这个代理
 
 # CLAUDE.md
 
@@ -144,68 +142,4 @@ claude code 模型权限、默认模式、项目规则、hooks、sandbox 等正�
 
 但是我们不可能每个对话结束之后都使用 `/cost`, `/usage` 命令看当前的使用情况，所以我们可以在 cc(version ≥ v2.1.132) 底部配置一个状态行（Status Line）实时显示 token 用量。
 
-## 配置状态行
-
-效果：底部实时显示 `[Opus] ctx: 35% | $0.25`
-
-**第一步**：创建脚本 `~/.claude/statusline-command.sh`
-
-```sh
-#!/bin/sh
-input=$(cat)
-
-# 模型名称简化
-model=$(echo "$input" | jq -r '.model.display_name // "Unknown"')
-case "$model" in
-  *Opus*)   short="Opus" ;;
-  *Sonnet*) short="Sonnet" ;;
-  *Haiku*)  short="Haiku" ;;
-  *)        short=$(echo "$model" | sed 's/Claude //; s/ [0-9].*//' | cut -c1-10) ;;
-esac
-
-# 上下文使用百分比
-used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
-if [ -n "$used_pct" ]; then
-  actual_floor=$(echo "$used_pct" | awk '{printf "%d", $1}')
-  ctx_str="ctx: ${actual_floor}%"
-else
-  ctx_str="ctx: -"
-fi
-
-# 根据 token 用量估算费用
-total_input=$(echo "$input" | jq -r '.context_window.total_input_tokens // 0')
-total_output=$(echo "$input" | jq -r '.context_window.total_output_tokens // 0')
-model_id=$(echo "$input" | jq -r '.model.id // ""')
-
-case "$model_id" in
-  *opus*)   input_price="15";  output_price="75" ;;
-  *sonnet*) input_price="3";   output_price="15" ;;
-  *haiku*)  input_price="0.8"; output_price="4" ;;
-  *)        input_price="3";   output_price="15" ;;
-esac
-
-cost_str=$(awk -v ti="$total_input" -v to="$total_output" \
-               -v ip="$input_price" -v op="$output_price" \
-  'BEGIN { printf "$%.2f", (ti/1000000*ip)+(to/1000000*op) }')
-
-printf "[%s] %s | %s" "$short" "$ctx_str" "$cost_str"
-```
-
-记得给执行权限：`chmod +x ~/.claude/statusline-command.sh`
-
-前置依赖：需要安装 jq（`brew install jq` / `apt install jq`）
-
-**第二步**：在 `~/.claude/settings.json` 中添加 statusLine 字段
-
-```json
-{
-  "statusLine": {
-    "type": "command",
-    "command": "bash ~/.claude/statusline-command.sh"
-  }
-}
-```
-
-重启 cc 即可生效。
-
-## 主动压缩
+直接使用 cc-usage 即可

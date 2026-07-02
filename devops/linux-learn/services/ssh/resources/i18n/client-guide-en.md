@@ -1,25 +1,19 @@
 ---
-Title: Complete Guide to Using an SSH Client
-SourceBlob: 22b0a4445a89dd0ab87f7e2e402adedfe590c6e6
+Title: Complete SSH Client Guide
+SourceBlob: 538581d1bf640fa7d11c9682cd5a752c756691a9
 ---
 
 ```
-BriefIntroduction: SSH client configuration guide
+BriefIntroduction: This article focuses on how a client uses SSH to connect to a remote host. The problems and optimizations involved include SSH authentication and simplifying SSH commands.
 ```
 
 <!-- split -->
 
-# Overview
-
-An SSH client mainly solves several problems:
-
-- Connecting to a remote host
-- Authenticating your identity
-- Simplifying daily connection commands
+# Before We Begin
 
 When we use SSH to connect to a remote server, we need to enter a username and password to log in.
 
-However, this can create security issues. For example, a server with a public IP may be exposed to password brute-force attacks. For security reasons, we usually use an SSH key.
+However, this can lead to security issues. For example, a server with a public IP may face password brute-force attacks. For security reasons, we usually use an SSH key instead.
 
 # Connection Basics
 
@@ -27,7 +21,7 @@ An SSH connection usually consists of the following parts:
 
 - `User`: the username used to log in to the remote server
 - `HostName`: the remote server's public IP, private IP, or domain name
-- `Port`: the port that the SSH server listens on, which defaults to `22`
+- `Port`: the port that the SSH server listens on. The default is `22`
 - `Authentication`: the authentication method, such as password or SSH key
 
 The most basic connection command is:
@@ -42,7 +36,7 @@ If the SSH server does not use the default port 22, you need to specify the port
 ssh -p <ssh-port> <username>@<remote-server-ip>
 ```
 
-# Create a Key Pair
+# Create A Key Pair
 
 Use the following command to generate an SSH key:
 
@@ -50,7 +44,7 @@ Use the following command to generate an SSH key:
 ssh-keygen -t rsa -b 4096 -C "note" -f ~/.ssh/<key-filename>
 ```
 
-`-t`: type, specifies the algorithm as rsa
+`-t`: type, specifies the rsa algorithm
 
 `-b`: bits, specifies the security bit length. For rsa, at least 2048 is recommended
 
@@ -60,11 +54,11 @@ ssh-keygen -t rsa -b 4096 -C "note" -f ~/.ssh/<key-filename>
 
 This generates `~/.ssh/<key-filename>` (private key) and `~/.ssh/<key-filename>.pub` (public key).
 
-During generation, we can choose whether to add a passphrase to the private key. If we add one, we need to enter the passphrase during login to decrypt the private key.
+During generation, we can choose whether to add a passphrase to the private key. If one is added, you need to enter the passphrase when logging in to decrypt the private key.
 
 The comment we write (`note`) is recorded at the end of the public key file. You can open the `.pub` file directly to view it.
 
-For the file name, it is best to choose a meaningful name, such as `Singapore-Linux-VM-SSH-Key`.
+For the file name, it is best to use a meaningful name, such as `Singapore-Linux-VM-SSH-Key`.
 
 e.g.
 
@@ -93,7 +87,7 @@ The key's randomart image is:
 
 > [!note]
 >
-> In a Windows PowerShell environment, this command may fail after asking you to enter the passphrase twice and report the following error:
+> In a Windows PowerShell environment, this command may ask you to enter the passphrase twice, then fail with an error:
 >
 > ```powershell
 > Generating public/private rsa key pair.
@@ -106,9 +100,9 @@ The key's randomart image is:
 >
 > For example: [Powershell does not expand '~' for external programs · Issue #20031 · PowerShell/PowerShell](https://github.com/PowerShell/PowerShell/issues/20031)
 
-# Install the Public Key
+# Install The Public Key
 
-Now that the SSH key has been generated, we need to add the public key to the remote server.
+Since the SSH key has been generated, we need to add the public key to the remote server.
 
 ## Use ssh-copy-id
 
@@ -135,11 +129,11 @@ and check to make sure that only the key(s) you wanted were added.
 
 > [!note]
 >
-> The `ssh-copy-id` command cannot be used in Windows PowerShell. In this case, you can open Git Bash and run the command there.
+> The `ssh-copy-id` command is not available in Windows PowerShell. In this case, you can open Git Bash and run the command there.
 
 ## Add authorized_keys Manually
 
-If the command-based approach does not work, we can manually add the public key to the server.
+If the command-line method does not work, we can manually add the public key to the server.
 
 First log in to the server, open the `~/.ssh/authorized_keys` file, and copy the contents of the `.pub` file into it.
 
@@ -153,13 +147,13 @@ In GCP, you need to go to the VM instance edit page:
 
 ![edit GCP VM](./resources/images/gcp-vm-ssh-1.png)
 
-After entering the edit page, scroll down to see the SSH key settings.
+After entering edit mode, scroll down to find SSH keys.
 
-![GCP SSH key setting](./resources/images/gcp-vm-ssh-2.png)
+![GCP SSH key settings](./resources/images/gcp-vm-ssh-2.png)
 
-# Connect with a Key
+# Connect With A Key
 
-If we directly use `ssh username@remote-server-ip`, SSH defaults to trying only keys with default names such as `id_rsa`.
+If we directly use `ssh username@remote-server-ip`, SSH will, by default, only try keys with default names such as `id_rsa`.
 
 So we need to specify the key on the command line:
 
@@ -167,15 +161,15 @@ So we need to specify the key on the command line:
 ssh -i ~/.ssh/id_rsa_remote_server username@remote-server-ip
 ```
 
-Of course, for convenience, we usually add configuration to `~/.ssh/config` so that SSH automatically knows which key to use for the request.
+Of course, for convenience, we usually add configuration to `~/.ssh/config` so that SSH automatically knows which key to use for a request.
 
 # SSH Config
 
-The SSH client can save connection parameters in `~/.ssh/config`. This way, we do not need to enter a series of complex parameters every time. Instead, we give these connection parameters a name (a host entry), and then quickly log in with `ssh <Host>`.
+The SSH client can save connection parameters in `~/.ssh/config`. This way, we do not need to enter a series of complex parameters every time. Instead, we give these connection parameters a name, called a host entry, and then quickly log in with `ssh <Host>`.
 
 ## Basic Host Entry
 
-Minimal configuration example:
+Minimum configuration example:
 
 ```sshconfig
 Host remote-server
@@ -184,11 +178,11 @@ Host remote-server
     IdentityFile ~/.ssh/id_rsa_remote_server
 ```
 
-This configuration means: when executing `ssh remote-server`, the SSH client automatically uses the host, user, and key specified here.
+This configuration means: when you run `ssh remote-server`, the SSH client will automatically use the host, user, and key specified here.
 
 ## Option Reference
 
-In real use, a host entry may also include settings such as port, agent, key selection, and keepalive.
+In actual use, a host entry may also include configurations such as port, agent, key selection, and keepalive.
 
 A more complete configuration is as follows:
 
@@ -212,21 +206,21 @@ Host <name>
 
 2. `AddKeysToAgent yes`
 
-   After successful authentication, the SSH client automatically stores the decrypted key in ssh-agent. If ssh-agent is not running, this will not take effect.
+   After successful authentication, the SSH client automatically stores the decrypted key in ssh-agent. If ssh-agent is not running, this does not take effect.
 
-   Without this option, ssh-agent will not automatically receive your key when you SSH into a server. In other words, you need to manually run `ssh-add` for that key.
+   Without this option, ssh-agent will not automatically obtain your key when you connect to a server via SSH. In other words, you need to manually run `ssh-add` for that key.
 
 3. `IdentitiesOnly yes`
 
-   During connection, use only the `~/.ssh/id_rsa` key for public key authentication, and do not try other keys.
+   During the connection, only use `~/.ssh/id_rsa` for public key authentication. Do not additionally try other keys.
 
 4. `ServerAliveInterval 20`
 
-   The SSH client sends an application-layer heartbeat packet to the server every 20 seconds to prevent the connection from being treated as an idle connection and reclaimed.
+   The SSH client sends an application-level heartbeat packet to the server every 20 seconds to prevent the connection from being reclaimed as an “idle connection”.
 
 5. `ServerAliveCountMax 6`
 
-   The SSH client disconnects only after 6 consecutive heartbeats receive no response, preventing immediate disconnection during temporary network instability.
+   The SSH client disconnects only after 6 consecutive heartbeats receive no response, preventing immediate disconnection during network fluctuations.
 
 6. `TCPKeepAlive yes`
 
@@ -234,17 +228,17 @@ Host <name>
 
 7. `IPQoS none`
 
-   Do not set DSCP/QoS markings for SSH traffic. This avoids disconnections or throttling caused by some network devices mishandling specific QoS markings.
+   Do not set DSCP/QoS markings for SSH traffic. This avoids disconnections or speed limits caused by some network devices mishandling specific QoS markings.
 
 > [!tip]
 >
-> In VS Code's Remote-SSH extension, `Remote-SSH: Open SSH Configuration File...` also edits this same file.
+> In VS Code's Remote-SSH extension, `Remote-SSH: Open SSH Configuration File...` edits this same file.
 >
 > Changes to `~/.ssh/config` take effect immediately for new SSH connections. You do not need to restart Windows, and usually do not need to restart ssh-agent.
 
 # SSH Agent
 
-If our SSH key has a passphrase, we need to enter it every time we connect. For convenience, we can use ssh-agent to store the decrypted private key (cache the decrypted private key in memory). This allows us to enter the passphrase only once and reuse the key during the session.
+If our SSH key has a password, we need to enter it every time we connect. For convenience, we can use ssh-agent to store the decrypted private key in memory, so that after entering the passphrase once, the key can be reused during the session.
 
 ## Windows
 
@@ -272,7 +266,7 @@ Add an SSH key to ssh-agent:
 ssh-add C:\Users\<username>\.ssh\github-ssh-key
 ```
 
-View the SSH keys that have already been added:
+View the SSH keys that have been added:
 
 ```powershell
 ssh-add -l
@@ -286,9 +280,9 @@ First check whether ssh-agent has already started:
 echo $SSH_AGENT_PID
 ```
 
-If `ssh-agent` is running, its process ID (PID) is displayed. If it is not running, the output is empty.
+If `ssh-agent` is running, it displays its process ID (PID). If it is not running, the output is empty.
 
-If the output is empty, start ssh-agent with the following command:
+If the output is empty, use the following command to start ssh-agent:
 
 ```bash
 eval "$(ssh-agent -s)"
@@ -318,23 +312,23 @@ After saving the file, reload the configuration:
 source ~/.bashrc  # 如果使用 bash
 ```
 
-After this setup, ssh-agent will start automatically every time you open a new terminal session, and your SSH key will be added.
+After this setup, ssh-agent will automatically start whenever you open a new terminal session, and it will add your SSH key.
 
-# SSH Agent for AI Coding Agents
+# SSH Agent For AI Coding Agents
 
-When using coding agents such as Codex, SSH Agent has an additional issue: the process where the coding agent runs `ssh` or `git push` is not necessarily in the same shell session as the terminal we operate manually.
+When using coding agents such as Codex, SSH Agent encounters an extra issue: the process where the coding agent runs `ssh` or `git push` is not necessarily in the same shell session as the terminal we operate manually.
 
-If the SSH private key has a passphrase, a normal terminal can prompt for the passphrase the first time the key is used, then add the decrypted key to ssh-agent. However, coding agents usually cannot ask us to enter a passphrase during command execution. If they also cannot see the current session's `SSH_AUTH_SOCK`, they cannot reuse the already unlocked key.
+If an SSH private key has a passphrase, a normal terminal can ask for the passphrase the first time it is used, then add the decrypted key to ssh-agent. But a coding agent usually cannot ask us to enter a passphrase during command execution. If it also cannot see the current session's `SSH_AUTH_SOCK`, it cannot reuse the already unlocked key.
 
-A direct but less ideal approach is to remove the passphrase from the private key. This allows the coding agent to use the key directly, but the risk is that once the private key file is read, it can be used directly.
+A direct but less ideal approach is to remove the passphrase from the private key. This lets the coding agent use the key directly, but the risk is: as long as the private key file can be read, it can be used directly.
 
 A better approach is to let the coding agent use ssh-agent instead of directly holding a private key without a passphrase.
 
 ## The Core Idea
 
-`SSH_AUTH_SOCK` points to ssh-agent's socket. This socket is not a file that stores decrypted keys, but an entry point to the ssh-agent process.
+`SSH_AUTH_SOCK` points to the ssh-agent socket. This socket is not a file that stores the decrypted key. It is the entry point to the ssh-agent process.
 
-The actual decrypted private key is stored in the memory of the ssh-agent process. Other programs request ssh-agent through the socket to perform signing for them, but they do not directly read the private key itself.
+The truly decrypted private key exists in the memory of the ssh-agent process. Other programs request ssh-agent through the socket to complete signing, but they do not directly read the private key itself.
 
 So the authorization model here is:
 
@@ -342,19 +336,19 @@ So the authorization model here is:
 private key file + passphrase -> ssh-agent process -> agent socket -> ssh/git/coding agent
 ```
 
-In other words, we can allow the coding agent to access the agent socket so it can use the key within the current authorization window. When the key is removed from the agent, the agent exits, or the socket is no longer exposed, the coding agent can no longer continue using this key.
+In other words, we can let the coding agent access the agent socket so it can use the key within the current authorization window. When the key is removed from the agent, the agent exits, or the socket is no longer exposed, the coding agent can no longer continue using this key.
 
 ## Fixed Agent Socket
 
-In a normal terminal, `SSH_AUTH_SOCK` usually points to the agent socket in the current shell session. However, in scenarios such as VS Code Remote-SSH, GUI apps, extension hosts, and task runners, different processes do not necessarily share the same shell session.
+In a normal terminal, `SSH_AUTH_SOCK` usually points to the agent socket in the current shell session. But in scenarios such as VS Code Remote-SSH, GUI apps, extension hosts, and task runners, different processes do not necessarily share the same shell session.
 
-Therefore, relying only on inheritance of the `SSH_AUTH_SOCK` environment variable is not stable. A more reliable approach is to use a fixed-path agent socket, such as:
+Therefore, relying only on inheritance of the `SSH_AUTH_SOCK` environment variable is not stable. A more stable approach is to use an agent socket at a fixed path, such as:
 
 ```text
 ~/.ssh/agent.sock
 ```
 
-Then make ssh-agent listen on this socket:
+Then let ssh-agent listen on this socket:
 
 ```bash
 export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
@@ -366,11 +360,11 @@ if [ "$?" = 2 ]; then
 fi
 ```
 
-If you want every terminal session to automatically use this fixed socket, you can put this block into `~/.bashrc` or the corresponding shell configuration file.
+If you want every terminal to automatically use this fixed socket, you can put this snippet in `~/.bashrc` or the corresponding shell configuration file.
 
 ## IdentityAgent
 
-Besides setting `SSH_AUTH_SOCK` in the shell, you can also use `IdentityAgent` in `~/.ssh/config` to make OpenSSH always use a specific agent socket.
+In addition to setting `SSH_AUTH_SOCK` in the shell, you can also use `IdentityAgent` in `~/.ssh/config` to make OpenSSH always use a specific agent socket.
 
 For example:
 
@@ -389,13 +383,13 @@ The purpose of `AddKeysToAgent yes` is: after this key is successfully used, the
 
 ## Temporary Authorization
 
-If we want the key to be available only for a limited period of time, we can use `ssh-add -t`:
+If we want the key to be available only for a period of time, we can use `ssh-add -t`:
 
 ```bash
 ssh-add -t 1h ~/.ssh/<key-filename>
 ```
 
-This means adding the key to the agent but keeping it for only 1 hour.
+This means adding the key to the agent, but keeping it for only 1 hour.
 
 You can also manually remove it when it is no longer needed:
 
@@ -403,13 +397,13 @@ You can also manually remove it when it is no longer needed:
 ssh-add -d ~/.ssh/<key-filename>
 ```
 
-Or clear all keys from the current agent:
+Or clear all keys in the current agent:
 
 ```bash
 ssh-add -D
 ```
 
-This approach is well suited for coding agents: we still set a passphrase on the private key, but temporarily add the key to ssh-agent when needed. The coding agent can use the key within this authorization window, and cannot continue using it after the window ends.
+This approach is suitable for coding agents: we still set a passphrase for the private key, but temporarily add the key to ssh-agent when needed. The coding agent can use the key within this authorization window, and can no longer continue using it after the window ends.
 
 ## VS Code Remote-SSH
 
@@ -423,12 +417,12 @@ A more stable approach is:
 2. Point to it in `~/.ssh/config` with `IdentityAgent ~/.ssh/agent.sock`
 3. When authorization is needed, manually run `ssh-add -t 1h ~/.ssh/<key-filename>`
 
-This way, even if the coding agent and terminal are not in the same session, when they run `ssh` or `git push`, they will go through the same agent socket.
+This way, even if the coding agent and terminal are not in the same session, when they run `ssh` or `git push`, they will use the same agent socket.
 
 ## Security Notes
 
 Using an agent socket is safer than directly giving the coding agent a private key without a passphrase, because the private key itself is not handed to the coding agent.
 
-However, note that as long as a process can access the agent socket, it can request ssh-agent to use the keys inside it during the current authorization window. Therefore, this approach solves “do not expose the private key” and “authorization can expire or be revoked”; it does not mean “confirm every single SSH key use individually.”
+But note: as long as a process can access the agent socket, it can request ssh-agent to use the keys inside it within the current authorization window. Therefore, this approach solves “do not expose the private key” and “authorization can expire or be revoked”; it does not mean “confirm every single SSH use separately”.
 
 If you want every use of the key to require confirmation, you can learn about `ssh-add -c` or use an agent with a confirmation mechanism, such as 1Password SSH Agent.

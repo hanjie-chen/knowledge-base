@@ -1,27 +1,21 @@
 ---
 Title: SSH 客户端完全使用指南
 Author: 陈翰杰
-Instructor: gemini-3-flash-preview, gemini-3-pro-preview
+Instructor: gemini3, GPT5
 CoverImage: ./resources/images/ssh.png
 RolloutDate: 2026-02-21
 ---
 
 ```
 BriefIntroduction: 
-客户端 SSH 配置指南
+本文主要讲 client ssh 如何连接到远程主机。这其中需要解决的问题和一些优化包括了：ssh 身份认证，ssh 命令简化
 ```
 
 <!-- split -->
 
 ![cover image](./resources/images/ssh.png)
 
-# Overview
-
-SSH client 主要解决几个问题：
-
-- 连接到远程主机
-- 认证自己的身份
-- 简化日常连接命令
+# Before we beginning
 
 当我们使用 SSH 连接到一台远程服务器的时候，需要输入 username、password 来进行登录。
 
