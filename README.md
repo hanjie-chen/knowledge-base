@@ -9,11 +9,22 @@
 
 原则：路径即分类。
 
-每一层目录都表示一个更具体的主题范围，把文章的分类尽可能交给目录路径表达，从而使得文件名保持简短。
+每一层目录都表示一个更具体的主题范围，把文章的分类尽可能交给目录路径表达，从而使得文件名保持简短。例如：`tools/git/commands.md`。
 
-例如：`tools/git/commands.md`
+分类信息只存在于路径这，不额外维护：移动文件即重新分类。目录树则是人和 AI agent 共用的导航接口。
 
-如果你是第一次进入这个仓库，通常可以从顶层主题目录开始，再顺着目录 `README.md` 往下阅读。
+当前的顶层主题目录：
+
+- `ai/` — AI 相关：LLM、coding agents、自动化平台
+- `cloud-infra/` — 云平台（Azure / GCP / Cloudflare）与 IaC（Terraform / Ansible）
+- `code/` — 编程语言、算法与工程实践
+- `devops/` — Docker、Kubernetes 等
+- `machine-setup/` — 个人机器配置：Windows / Linux / 网络
+- `personal-growth/` — 非技术类：生活经验、理财、世界观
+- `tools/` — 日常工具指南：Vim、PowerShell、PowerToys 等
+- `web-dev/` — Web 开发：前端、后端、安全
+
+如果你是第一次进入这个仓库，可以从上面的主题目录挑一个进入，再顺着各级目录的 `README.md` 往下阅读。
 
 ## Content Organization
 
