@@ -37,43 +37,6 @@ Codex 会在每次启动时自动读取并合并一条“指令链”：
 
 作用：把你每次都要重复说的“工作协议/目录说明/输出格式”固化下来。
 
-## interactive mode
-
-使用命令 `codex` 直接进入交互模式
-
-<img src="./images/interactive-mode.png" alt="interactive mode" style="zoom:50%;" />
-
-使用 `/` 可以使用一些内置的命令
-
-<img src="./images/select.png" alt="codex cli select" style="zoom:50%;" />
-
-实际上的命令不仅仅是上线显示的这些，比较常用的命令有
-
-status
-
-<img src="./images/status.png" alt="status" style="zoom:50%;" />
-
-如果我们需要开启一段新对话，那么我们可以使用
-
-- `/clear`：清屏 + 开新对话（从头开始聊）。
-
-## plan mode
-
-Plan mode 会先让 Codex 做“方案设计 / 执行分解”，再进入真正的修改与实现，而不是一上来就直接改代码。
-
-更适合复杂任务。比如重构、迁移、跨多个文件的大改动、需要分阶段验证的任务。因为它会更强调“步骤、里程碑、顺序、边界”，降低一上来改偏的概率。
-
-可能会先问你问题，如果还需要补充信息，Codex 会先问你，而不是直接动手。
-
-区分：
-
-- 普通 Agent/直接实现模式：你说做什么，它尽快开始看文件、跑命令、改代码”。
-- Plan mode：先出施工方案、拆步骤、确认方向，再继续”。
-
-## subagent
-
-subagent 需要指定开启，codex 无法自己判断子否开启
-
 # codex exec
 
 codex exec 命令是 Codex CLI 的非交互模式。
