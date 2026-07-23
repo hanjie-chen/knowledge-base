@@ -1,20 +1,3 @@
----
-Title: AGENTS.md & README.md 使用指南
-Author: 陈翰杰
-Instructor: GPT5(5.4)
-CoverImage: ./resources/images/agents-readme.jpg
-RolloutDate: 2026-03-29
----
-
-```
-BriefIntroduction: 
-一些关于 AI agent 辅助编程的个人经验
-```
-
-<!-- split -->
-
-<img src="./resources/images/agents-readme.jpg" alt="cover" style="zoom: 67%;" />
-
 在我们使用 coding agent(claude code, codex) 的时候，常常遇到这样子一个问题：如何让 AI 快速读懂一个比较复杂的 project，然后上手修改？
 
 其实问题可以分成两部分：

@@ -5,15 +5,13 @@
 - 个人网站：https://hanjie-chen.com/
 - 网站源码：https://github.com/hanjie-chen/website
 
-## How To Navigate
+## Navigation
 
 原则：路径即分类。
 
-每深入一层目录都表示一个更具体的主题范围，文章的分类尽可能交给目录路径表达，从而保持文件名简洁。例如：`tools/git/commands.md`。
+每一级目录都表示更具体的主题。内容的分类只由路径表达，文件名保留路径尚未提供的信息；移动文件即重新分类，不额外维护分类信息。例如：`tools/git/commands.md`。
 
-分类信息只存于路径，不额外维护：移动文件即重新分类。目录树则是人和 AI agent 共用的导航接口。
-
-当前的顶层主题目录：
+目录树是人和 AI agent 共用的导航入口。当前的顶层主题目录：
 
 - `ai/` — AI 相关：LLM、coding agents、自动化平台
 - `cloud-infra/` — 云平台（Azure / GCP / Cloudflare）与 IaC（Terraform / Ansible）
@@ -24,19 +22,9 @@
 - `tools/` — 日常工具指南：Vim、PowerShell、PowerToys 等
 - `web-dev/` — Web 开发：前端、后端、安全
 
-如果你是第一次进入这个仓库，可以从上面的主题目录挑一个进入，再顺着各级目录的 `README.md` 往下阅读。
+部分目录包含自己的 `README.md`，作为该目录的入口，用于介绍子主题以及需要了解的 notes 或 guiding ideas。首次浏览时，可以先选择一个顶层主题，再沿目录中的 `README.md` 继续阅读。
 
-## Content Organization
-
-除了本 `README.md`，部分目录也会有自己的 `README.md`。
-
-它通常是该目录的入口页，用来：
-
-- 列出下面有哪些子主题或子目录
-- 记录该主题（目录）下值得知道的 notes 或 guiding ideas
-- 其他可能对该主题有用的信息
-
-## Article Layout
+## Content Resources
 
 文章目录通常会把正文和附属资源放在一起管理。常见形式如下：
 
@@ -68,7 +56,7 @@ articles-dir/
    - `.kb-tools/translator/` 用于生成或更新文章的英文翻译
    - `.kb-tools/website_sync/` 用于判断一次变更是否会影响网站发布结果
 
-## Repository Setup
+## Setup
 
 维护这个仓库需要的配置。
 
