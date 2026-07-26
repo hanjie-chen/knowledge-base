@@ -23,6 +23,8 @@ network:
 
 machien type: e2-micro
 
+free usage: Free Tier `e2-micro` instance limit is by time, not by instance. free until you have used a number of hours equal to the total hours in the current month
+
 入栈流量是免费的
 
 所以只需要满足这里几个条件就可以白嫖了。我创建了一台这样子的机器，不知道最终是否会收费来着。

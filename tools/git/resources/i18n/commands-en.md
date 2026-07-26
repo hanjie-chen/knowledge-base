@@ -1,15 +1,15 @@
 ---
 Title: Git Command Quick Reference
-SourceBlob: 8d939dd2b64fd7455ca659ab8e98ae7a9bb057ab
+SourceBlob: 4dc645d6cadb799a3f22bf287e2d4c92a225cb15
 ---
 
 ```
-BriefIntroduction: Common Git commands, typical scenarios, and pitfalls organized by workflow
+BriefIntroduction: Common Git commands, typical scenarios, and common pitfalls organized by workflow
 ```
 
 <!-- split -->
 
-After creating a new repository on GitHub, GitHub will show instructions for what to do next. What we need to do is follow those instructions to initialize the local repository and complete the first push.
+After creating a repository on GitHub, GitHub will show you what to do next. Follow the repository’s instructions to initialize the local repository and complete the first push.
 
 <img src="./resources/images/new-repo.png" alt="new repo" style="zoom:50%;" />
 
@@ -17,11 +17,11 @@ After creating a new repository on GitHub, GitHub will show instructions for wha
 
 ## git status
 
-Shows the current status of the repository.
+Displays the current state of the repository.
 
 ## git add
 
-I usually go directly to the project root and run `git add .` to stage everything. This command adds modified files to the staging area.
+I usually go directly to the project root directory and run `git add .` to include everything. This command adds modified files to the staging area.
 
 ## git commit
 
@@ -29,33 +29,33 @@ I usually go directly to the project root and run `git add .` to stage everythin
 git commit -m "add your specification of this commit"
 ```
 
-Each commit records who changed what and when, and lets you return to that state later.
+Each commit records who made which changes and when, allowing you to return to that state later.
 
-### commit id
+### Commit ID
 
-- After each successful commit, Git generates a unique 40-character hexadecimal string, called a SHA-1 hash, as the ID of that commit.
-- Even changing a single space will completely change the SHA ID.
-- When running commands or rolling back in DevOps workflows, you usually only need the first 7 characters of the SHA, such as `a1b2c3d`, to identify the commit precisely.
+- After each successful commit, Git generates a unique 40-character hexadecimal string called a SHA-1 hash, which serves as the commit ID.
+- Even changing a single space will produce a completely different SHA ID.
+- When running commands or performing a DevOps rollback, the first seven characters of the SHA, such as `a1b2c3d`, are usually enough to identify the commit precisely.
 
-View commit history and the corresponding SHA IDs:
+View the commit history and its corresponding SHA IDs:
 
 ``` shell
 git log --oneline
 ```
 
-If you forget the details of the last commit, you can use:
+If you have forgotten the details of the most recent commit, use:
 
 ```shell
 git show
 ```
 
-By default, this command shows the content of `HEAD`, which is the latest commit on the current branch. You can also append a specific SHA ID to view a historical commit: `git show <SHA>`
+By default, this command displays the contents of `HEAD`, which is the latest commit on the current branch. You can also append a specific SHA ID to inspect an earlier commit: `git show <SHA>`
 
 ### git add + git commit
 
-For tracked files: if these files were only modified and no new files need to be added, you can directly use `git commit -a -m "message"` to commit the changes. This command automatically commits modifications to all tracked files, without requiring a manual `git add` first.
+For tracked files: If you have only modified tracked files and do not need to add any new files, you can commit the changes directly with `git commit -a -m "message"`. This command automatically commits modifications to all tracked files, so you do not need to run `git add` first.
 
-For new files: you need to use `git add` to add them to the staging area, because Git only tracks files that have already been added to version control by default. New files must be added with `git add` before they are tracked. In this case, you can use:
+For new files: You must add them to the staging area with `git add`, because Git tracks only files that have already been added to version control. New files must first be added with `git add` before they become tracked. In this case, you can use:
 
 ```bash
 git add . && git commit -m "message"
@@ -65,26 +65,26 @@ git add . && git commit -m "message"
 
 ## git push
 
-Pushes local content to GitHub for synchronization.
+Push local content to GitHub to synchronize it.
 
-### first push of a new branch
+### First Push of a New Branch
 
-If this is a newly created local branch, meaning the remote repository does not yet have this branch, and you are pushing it to the remote repository for the first time, you need to include the `-u` parameter:
+If you have created a new local branch that does not yet exist in the remote repository, use the `-u` option the first time you push it:
 
 ```shell
 git push -u origin <branch-name>
 ```
 
-This command does two things:
+This command performs two tasks:
 
-1. Creates the branch remotely: creates a new branch with the same name in the remote repository, such as GitHub, and uploads the code.
-2. Sets up the upstream relationship: binds the local branch to the remote branch.
+1. Creates the remote branch: It creates a new branch with the same name in the remote repository, such as GitHub, and uploads the code.
+2. Establishes an upstream relationship: It links the local branch to the remote branch.
 
-If you do not include `-u`, and only use `git push origin <branch-name>`, Git can still create the branch remotely, but it will not set up the default upstream relationship. This means future pushes cannot simply use the shorter `git push`; Git will report an error because it does not know which remote branch the local branch should be pushed to.
+Without the `-u` option—using only `git push origin <branch-name>`—the branch will still be created remotely, but no default upstream relationship will be established. This means you will not be able to use the shorter `git push` command later. Git will report an error because it does not know which remote branch should receive the local branch.
 
-### push rejected
+### Push Rejected
 
-Sometimes when running `git push`, you may encounter an error like this:
+Sometimes, running `git push` produces an error like this:
 
 ```shell
 ➜ git push
@@ -98,32 +98,32 @@ hint: 'git pull' before pushing again.
 hint: See the 'Note about fast-forwards' in 'git push --help' for details.
 ```
 
-This means the remote repository already has commits that your local repository does not have, so you need to run `git pull` first to sync the latest changes.
+This means the remote repository contains commits that do not yet exist locally. You must first run `git pull` to synchronize the latest changes.
 
 ## git pull
 
-Corresponding to `git push`, `git pull` is used to synchronize the latest changes from a remote repo, such as GitHub, to your local repository.
+As the counterpart to `git push`, `git pull` synchronizes the latest changes from a remote repository, such as GitHub, to the local repository.
 
-Suppose we develop the same project on multiple machines, such as an Azure VM, local PC, and MacBook Pro. If we run `git push` on one machine, the other machines need to run `git pull` so their local code can catch up with the latest remote state.
+Suppose we develop the same project on multiple machines—an Azure VM, a local PC, and a MacBook Pro—and run `git push` on one of them. The other machines then need to run `git pull` so their local code catches up with the latest remote state.
 
-By default, running `git pull` on a branch only updates the current local branch. It does not automatically update other branches, though it usually refreshes information about remote-tracking branches.
+By default, running `git pull` on a branch updates only the current local branch. It does not automatically update other local branches, although it will usually refresh information about remote-tracking branches.
 
-### how git pull works
+### How git pull Works
 
 More precisely:
 
 git pull = git fetch + git merge
 
-- git fetch: gets the latest commit from the current remote branch
-- git merge: tries to merge that commit into the current local branch
+- git fetch: Retrieves the latest commits from the current remote branch.
+- git merge: Attempts to merge those commits into the current local branch.
 
-So the current local branch is actually updated. Other local branches do not automatically move forward, but remote-tracking branch information is usually refreshed.
+Therefore, the current local branch is actually updated. Other local branches do not automatically move forward, although information about remote-tracking branches is usually refreshed.
 
-### divergent branches
+### Divergent Branches
 
-When the latest code on the remote, such as GitHub, has been modified, and the local code has also been modified and committed with `git add + git commit`.
+Suppose the latest code in the remote repository on GitHub has been modified, while the local code has also been modified and committed with `git add` and `git commit`.
 
-Even if the modifications do not conflict, when we run `git pull` locally, the following message appears:
+Even if the changes do not conflict, running `git pull` locally may produce the following message:
 
 ```shell
 $ git pull
@@ -150,24 +150,24 @@ hint: invocation.
 fatal: Need to specify how to reconcile divergent branches.
 ```
 
-Git is asking for your preference: since both the remote branch on GitHub and the local branch have different new commits, how do you want to combine them?
+Git is asking for your preference: because both the remote repository on GitHub and the local repository contain different new commits—known as divergent branches—how would you like Git to combine them?
 
-We can use rebase to “move” your local commits after the remote commits.
+You can use rebase to move your local commits so that they come after the remote commits.
 
-Run this inside your repository directory:
+Run the following command in your repository directory:
 
 ```shell
 $ git pull --rebase
 Successfully rebased and updated refs/heads/main.
 ```
 
-This does two things: first pulls the remote updates, then **replays** your local commits one by one after the latest commit on `origin/main`. If there are no conflicts, it succeeds directly.
+This performs two operations: it first retrieves the remote updates, then **replays your local commits one by one after** the latest commit on `origin/main`. If there are no conflicts, the operation will complete successfully.
 
-After it succeeds, run `git push` again.
+Afterward, run `git push`.
 
 # Git State Flow
 
-To understand what the previous commands do, you can first think of Git as several different state areas.
+To understand what the preceding commands do, first think of Git as several distinct state areas.
 
 ```text
 Working Directory     Staging Area       Local Repository    Remote Repository
@@ -177,12 +177,12 @@ Working Directory     Staging Area       Local Repository    Remote Repository
                                                 +---- git push ---->+
 ```
 
-- `Working Directory`: where you edit files
-- `Staging Area`: the area prepared for commit after running `git add`
-- `Local Repository`: the content saved in the local repository after running `git commit`
-- `Remote Repository`: the content saved on the remote after running `git push`
+- `Working Directory`: Where you edit files.
+- `Staging Area`: The area containing changes prepared for a commit after running `git add`.
+- `Local Repository`: The content stored in the local repository after running `git commit`.
+- `Remote Repository`: The content stored remotely after running `git push`.
 
-From this perspective, `git add`, `git commit`, and `git push` each move content one layer forward, while `git pull` synchronizes the latest state from the remote repository back to local.
+From this perspective, `git add`, `git commit`, and `git push` each move content forward by one stage, while `git pull` synchronizes the latest state of the remote repository back to the local repository.
 
 # Branch Management
 
@@ -204,7 +204,7 @@ View remote branches:
   origin/main
 ```
 
-View all branches, both local and remote:
+View all local and remote branches:
 
 ```shell
 ➜ git branch -a
@@ -216,17 +216,17 @@ View all branches, both local and remote:
 
 > [!note]
 >
-> After `git clone`, Git brings the remote repository’s branch information to local, but by default it only checks out the remote repository’s default branch, usually `main`.
+> After `git clone`, Git brings information about the remote repository’s branches into the local repository, but by default it checks out only the remote repository’s default branch, usually `main`.
 >
-> So when you run `git branch`, you usually only see the `main` branch, while `git branch -r` shows the remote branches.
+> Therefore, `git branch` will usually show only the `main` branch, while `git branch -r` will show the remote branches.
 
 ## Switch Branch
 
 The `git checkout <branch-name>` command first looks for a local branch named `branch-name`. If it finds one, it switches to that branch.
 
-If no local branch is found, it looks for a remote branch named `branch-name`. If it finds one, it creates a local branch with the same name, sets up the tracking relationship, and then switches to the new local branch.
+If it does not find a local branch, it looks for a remote branch named `branch-name`. If it finds one, it creates a local branch with the same name, establishes a tracking relationship, and then switches to the new local branch.
 
-e.g.
+For example:
 
 ```shell
 ➜ git branch
@@ -244,51 +244,51 @@ branch 'backend-development' set up to track 'origin/backend-development'.
 
 The `git checkout -b <branch-name>` command creates a new branch and immediately switches to it. If the branch already exists, Git reports an error.
 
-This command is actually shorthand for `git branch <branch-name>` followed by `git checkout <branch-name>`.
+This command is shorthand for `git branch <branch-name>` followed by `git checkout <branch-name>`.
 
-The new branch is based on the branch you are currently on. For example, if you are currently on `main`, then the new branch `branch-name` will be created based on `main`.
+The new branch is based on the branch that is currently checked out. For example, if you are currently on the `main` branch, the new `branch-name` branch will be created from `main`.
 
 ### First Push to Remote
 
-After creating a branch, it only exists locally. The remote does not yet have this branch, so the first push needs to use the following command to push it to the remote:
+After creating a branch, it exists only locally. Because the corresponding remote branch does not yet exist, use the following command for the first push:
 
 ```shell
 git push -u origin <branch-name>
 ```
 
-If you think writing the branch name every time is too troublesome, you can configure Git’s push behavior:
+If specifying the branch name every time feels cumbersome, you can configure Git’s push behavior:
 
 ```bash
 git config --global push.default current
 ```
 
-After this setting, whenever you run `git push`, Git automatically pushes to a remote branch with the same name, creating it if it does not exist.
+After this setting is applied, running `git push` automatically pushes the current branch to a remote branch with the same name, creating it if it does not already exist.
 
 ## Parallel Branch Work
 
-Suppose we run into this situation:
+Suppose we encounter the following situation:
 
-We are developing on the main branch and talking to a coding agent, such as Codex or Claude Code. This agent may run for a long time, so we do not need to watch it constantly.
+We are developing on the `main` branch while interacting with a coding agent such as Codex or Claude Code. The agent may run for a long time, so we do not need to watch it continuously.
 
-But at the same time, what if we want to inspect or modify something on another branch, such as k8s-lab?
+Meanwhile, we want to inspect or modify something on another branch named `k8s-lab`. What should we do?
 
-If two sessions share the same Git working directory, then running this directly in the current directory:
+If both sessions share the same Git working directory, running the following command directly in the current directory:
 
 ```shell
 git checkout k8s-lab
 ```
 
-will switch the files in that directory to the state of the k8s-lab branch. As a result, the working directory that the agent session running on the main branch depends on will also change, which may disrupt its context or runtime environment.
+will switch the files in that directory to the state of the `k8s-lab` branch. As a result, the working directory used by the agent session running on `main` will also change, potentially disrupting its context or execution environment.
 
 > [!note]
 >
-> This also explains why tmux does not truly solve this problem.
+> This also explains why tmux cannot truly solve this problem.
 >
-> tmux only opens multiple terminal sessions. If these terminals all operate on the same Git directory, then once `git checkout` is run in one terminal, the directory state seen by the other terminals also changes, because they share the same working directory.
+> tmux merely provides multiple terminal sessions. If those terminals all operate on the same Git directory, running `git checkout` in any one of them changes the directory state seen by all the others because they share the same working directory.
 
-This is where the `git worktree` command can be used.
+This is where the `git worktree` command is useful.
 
-It creates another independent working directory under the same Git repository, and usually checks out that directory to a specific branch.
+It creates another independent working directory for the same Git repository and usually checks out a particular branch in that directory.
 
 For example:
 
@@ -298,22 +298,20 @@ repo
 └── website-k8s/      -> k8s-lab
 ```
 
-This means:
+In this setup:
 
-- the `website/` worktree is currently checked out on `main`
-- the `website-k8s/` worktree is currently checked out on `k8s-lab`
+- The `website/` worktree currently has `main` checked out.
+- The `website-k8s/` worktree currently has `k8s-lab` checked out.
 
-So one coding agent session can continue running on the main branch.
+A coding agent session can therefore continue running on the `main` branch, while we enter the other worktree to inspect or modify code on the `k8s-lab` branch without affecting the agent.
 
-Meanwhile, we can enter another worktree to inspect or modify code on the k8s-lab branch without affecting the former.
+You can think of a worktree as expanding a branch into an independent working directory.
 
-You can understand worktree as expanding a branch into an independent working directory.
-
-In the earlier Git State Flow, Working Directory means “where you edit files”; `git worktree` can be understood as allowing the same repository to have multiple independent Working Directories at the same time.
+In the earlier Git State Flow, the Working Directory represents the location where files are edited. `git worktree` allows the same repository to have multiple independent working directories at the same time.
 
 > [!note]
 >
-> By default, the same branch cannot be checked out into two worktrees at the same time.
+> By default, the same branch cannot be checked out in two worktrees at the same time.
 
 Usage:
 
@@ -323,12 +321,12 @@ Create a new worktree:
 git worktree add ../website-k8s k8s-lab
 ```
 
-- Creates a new directory at `../website-k8s`
-- Checks out that directory to `k8s-lab`
+- Creates a new directory at `../website-k8s`.
+- Checks out `k8s-lab` in that directory.
 
-That is, `git worktree add <path> <branch>`.
+In other words: `git worktree add <path> <branch>`.
 
-View the worktree list:
+View the list of worktrees:
 
 ```shell
 git worktree list
@@ -340,27 +338,27 @@ Remove a worktree:
 git worktree remove ../website-k8s
 ```
 
-If this worktree still has uncommitted changes, Git may refuse to remove it by default.
+If the worktree still contains uncommitted changes, Git may refuse to remove it by default.
 
 ## Merge Branch
 
-When we develop on a branch and the work is mostly done, for example a feature is complete or development has reached a certain stage, we can synchronize the content developed on that branch back to main.
+After developing on a branch and reaching a suitable point—for example, completing a feature or finishing a development stage—you can merge the work from that branch into `main`.
 
-The steps are as follows.
+Follow these steps.
 
-First switch to the main branch:
+First, switch to the `main` branch:
 
 ```bash
 git checkout main
 ```
 
-Merge the branch content into main:
+Merge the branch into `main`:
 
 ```bash
 git merge <branch-name> -m "merge message"
 ```
 
-Push the updated main branch to the remote repository, if there is one:
+Push the updated `main` branch to the remote repository, if one exists:
 
 ```bash
 git push origin main
@@ -368,13 +366,13 @@ git push origin main
 
 ## Delete Branch
 
-After a branch has finished development and been merged into main, we can delete it to keep the repository clean.
+After development on a branch is complete and the branch has been merged into `main`, you can delete it to keep the repository tidy.
 
 First, delete the local branch.
 
 ### Delete Local Branch
 
-Use the `-d` option, lowercase d, to safely delete a branch that has already been merged into the current branch:
+Use the lowercase `-d` option to safely delete a branch that has already been merged into the current branch:
 
 ```bash
 git branch -d <branch-name>
@@ -382,11 +380,11 @@ git branch -d <branch-name>
 
 For example: `git branch -d backend-development`
 
-If the branch has not been merged yet, Git warns you and prevents deletion.
+If the branch has not been merged, Git will display a warning and prevent its deletion.
 
-Force delete a local branch:
+To force-delete a local branch:
 
-If you are sure you want to delete an unmerged branch, you can use the `-D` option, uppercase D, to force deletion:
+If you are certain that you want to delete an unmerged branch, use the uppercase `-D` option:
 
 ```bash
 git branch -D <branch-name>
@@ -394,7 +392,7 @@ git branch -D <branch-name>
 
 > [!note]
 >
-> Using `git branch -d <branch-name>` only deletes the local branch. It does not affect the branch on the remote repository, such as Remote/GitHub, at all.
+> Running `git branch -d <branch-name>` deletes only the local branch. It has no effect on the branch in the remote repository, such as GitHub.
 
 Next, delete the remote branch.
 
@@ -410,7 +408,7 @@ git push origin --delete <branch-name>
 
 ## git restore
 
-If you modified a file but have not run `git add`, e.g.
+Suppose you have modified a file but have not run `git add`, for example:
 
 ```bash
 $ git status
@@ -425,68 +423,68 @@ Changes not staged for commit:
 no changes added to commit (use "git add" and/or "git commit -a")
 ```
 
-In this case, rolling back the change is very simple. You can directly use the command shown in Git’s prompt:
+In this situation, discarding the changes is straightforward. Use the command shown in Git’s message:
 
 ```bash
 git restore compose.yml
 ```
 
-Note that:
+Keep the following points in mind:
 
-1. This operation directly discards all modifications to compose.yml.
-2. This operation cannot be undone, so confirm that you really want to discard these changes before running it.
+1. This operation immediately discards all changes made to `compose.yml`.
+2. This operation cannot be undone, so confirm that you truly want to abandon the changes before running it.
 
-If you want to inspect exactly what changed before rolling back, use:
+If you want to inspect the changes before discarding them, use:
 
 ```bash
 git diff compose.yml
 ```
 
-This lets you see the specific modifications before deciding whether to roll them back.
+This displays the exact changes so that you can decide whether to discard them.
 
-If the modifications have already entered the staging area, `git restore <file>` is no longer enough. You need to handle staged changes in another way.
+If the changes have already entered the staging area, `git restore <file>` is not sufficient. You will need another method to handle the staged changes.
 
 ## git reset
 
-`git reset` is used to move the current state back to a certain point.
+`git reset` moves the current state back to a specified point.
 
-### reset to last commit
+### Reset to the Last Commit
 
-If you only want to discard local modifications that have not been committed, use:
+If you only want to discard local changes that have not yet been committed, use:
 
 ```bash
 git reset --hard HEAD
 ```
 
-Where:
+Here:
 
-- `HEAD` points to the latest commit on the current branch
-- `--hard` means resetting both the Working Directory and the Staging Area
+- `HEAD` points to the latest commit on the current branch.
+- `--hard` resets both the Working Directory and the Staging Area.
 
-So this command clears changes in the working directory and staging area, but it does not move the local branch back to an earlier commit.
+This command therefore clears changes from the working directory and staging area, but it does not move the local branch back to an earlier commit.
 
-### reset to remote branch
+### Reset to the Remote Branch
 
-If you want to discard all local modifications and local commits, keeping only the latest state from the remote repository, use:
+If you want to discard all local changes and local commits, keeping only the latest state of the remote repository, use:
 
 ```bash
 git fetch origin
 git reset --hard origin/main
 ```
 
-Where:
+Here:
 
-- `git fetch origin` gets the latest state from the remote, but does not automatically merge it
-- `origin/main` points to the latest position of the remote repository’s `main` branch
-- `git reset --hard origin/main` forcibly resets the current branch to the state of the remote branch
+- `git fetch origin` retrieves the latest state of the remote repository without automatically merging it.
+- `origin/main` points to the latest position of the remote repository’s `main` branch.
+- `git reset --hard origin/main` forcibly resets the current branch to the state of the remote branch.
 
-This means it clears:
+This clears:
 
-- modifications in the Working Directory
-- modifications in the Staging Area
-- local commits in the Local Repository that have not yet been pushed
+- Changes in the Working Directory.
+- Changes in the Staging Area.
+- Unpushed local commits in the Local Repository.
 
-### rollback scope
+### Rollback Scope
 
 ```text
 Working Directory 	  Staging Area 	 local repository     remote repository
@@ -501,13 +499,13 @@ Working Directory 	  Staging Area 	 local repository     remote repository
 
 ## Clone Repository
 
-If we want to clone a remote repository locally, we can use the `git clone [url]` command. e.g.
+To clone a remote repository locally, use the `git clone [url]` command. For example:
 
 ```shell
 git clone https://github.com/hanjie-chen/PersonalArticles.git
 ```
 
-This command creates a folder with the same name locally, then downloads the contents of the remote repo into it.
+This command creates a local folder with the same name and downloads the contents of the remote repository into it.
 
 ```shell
 ~ # git clone https://github.com/hanjie-chen/PersonalArticles.git
@@ -524,9 +522,9 @@ PersonalArticles
 
 > [!note]
 >
-> For now, you can understand this as downloading the remote repository locally, but it is more complete than a normal download because it also includes Git history and repository information.
+> For now, you can think of this as downloading the remote repository locally. However, it is more complete than an ordinary download because it also includes the Git history and repository metadata.
 
-If we want to specify the folder, we can add the folder path directly at the end of the `git clone` command. e.g.
+To specify the destination folder, append its path to the end of the `git clone` command. For example:
 
 ```bash
 git clone https://github.com/hanjie-chen/PersonalArticles.git ./articles-data
@@ -534,60 +532,60 @@ git clone https://github.com/hanjie-chen/PersonalArticles.git ./articles-data
 
 > [!note]
 >
-> If the target directory already exists, it usually must be empty.
+> If the destination directory already exists, it must usually be empty.
 
 ### Shallow Clone
 
-Sometimes, we only need to download the current code of a repo, such as for a knowledge base repo, and do not need the repository’s history. We can use this command to fetch only the current content:
+Sometimes, we only need the current code from a remote repository—for example, when working with a knowledge base repository—and do not need its history. In that case, use the following command to retrieve only the current content:
 
 ```shell
 git clone --depth 1 [url]
 ```
 
-The default `git clone` downloads all historical changes from the “first line of code” to the “current code.”
+By default, `git clone` downloads the repository’s complete history.
 
-`--depth 1` tells Git: “I only want the state of the latest commit. I do not want any earlier history.”
+The `--depth 1` option tells Git to retrieve only the latest commit state and omit all earlier history.
 
-This can reduce storage pressure caused by historical changes.
+This reduces the storage space and download time required for the repository’s historical changes.
 
 ### HTTPS vs. SSH
 
-There are two ways to run `git clone`: one uses HTTPS, and the other uses SSH. e.g.
+There are two ways to run `git clone`: using HTTPS or SSH. For example:
 
 ```bash
 git clone https://github.com/hanjie-chen/PersonalArticles.git
 git clone git@github.com:hanjie-chen/PersonalArticles.git
 ```
 
-The difference between these two methods is the authentication method:
+The difference between these two methods lies in how authentication works:
 
-- HTTPS: when you need to run `git push`, extra authentication is required, such as browser login or a token
-- SSH: depends on a local SSH key and GitHub public key configuration
+- HTTPS: When running `git push`, you need additional authentication, such as signing in through a browser or using a token.
+- SSH: Relies on a local SSH key and the corresponding public key configured on GitHub.
 
-In general, choose the second method: configure an SSH key and use Git over SSH.
+In general, the second method is preferable: configure an SSH key and use Git over SSH.
 
 ## Manage Remote
 
 ### View Remote
 
-You can use the following command to view the remote URL associated with the current Git repository:
+Use the following command to view the remote URLs associated with the current Git repository:
 
 ```bash
 git remote -v
 ```
 
-After running this command, you will see output similar to this:
+After running the command, you will see output similar to this:
 
 ```
 origin  https://github.com/username/repository.git (fetch)
 origin  https://github.com/username/repository.git (push)
 ```
 
-Here, `origin` is the default remote name, followed by the URL of the remote repository. If you have multiple remote repositories, they will all be listed here.
+Here, `origin` is the default remote name, followed by the remote repository’s URL. If you have multiple remote repositories, they will all be listed here.
 
 ### Change Remote URL
 
-If the repository name on GitHub has changed, or if you want to switch the remote from HTTPS to SSH, you can use the following command to modify the remote repository URL:
+If the repository name on GitHub has changed, or if you want to switch the remote from HTTPS to SSH, use the following command to update the remote repository URL:
 
 ```shell
 git remote set-url origin https://github.com/username/new-repo-name.git

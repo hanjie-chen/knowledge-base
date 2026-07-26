@@ -544,17 +544,17 @@ git clone https://github.com/hanjie-chen/PersonalArticles.git ./articles-data
 
 ### Shallow Clone
 
-有时候，我们只需要下载当前 repo 的代码（比如说对于一个 knowledge base repo）而不需要这个仓库的历史信息，我们可以使用这个命令只拿取当前内容
+有时候，我们只需要下载 remote repo 的当前代码（比如说对于一个 knowledge base repo）而不需要历史信息，我们可以使用这个命令只拿取当前内容
 
 ```shell
 git clone --depth 1 [url]
 ```
 
-默认的 `git clone` 会把仓库从“第一行代码”到“当前代码”的所有历史修改全部下载下来。
+默认的 `git clone` 命令会把仓库的所有历史修改全部下载下来。
 
-而 `--depth 1` 告诉 Git：“我只要最后一次提交（Commit）的状态，之前的历史记录我通通不要。”
+而 `--depth 1` 告诉 Git：“我只要最后一次 Commit状态，之前的历史记录我通通不要。”
 
-可以减少因为历史修改带来的存储空间压力
+从而减少因为下载历史修改带来的存储空间和下载时间开销。
 
 ### HTTPS vs. SSH
 

@@ -7,13 +7,9 @@ OWASP 是一个全球性的非营利组织，致力于提高软件安全性。�
 通过开放的方式分享安全知识，减少 Web 应用的漏洞。
 
 #### 著名贡献
-- **OWASP Top 10**：列出了 Web 应用中最常见的十大安全风险（如 SQL 注入、跨站脚本攻击 XSS 等），是学习 Web 安全的入门指南。
-- **工具和项目**：如 OWASP ZAP（漏洞扫描工具）、OWASP Dependency-Check（依赖检查工具）等。
-- **OWASP CRS**：即 Core Rule Set（核心规则集），是与 WAF（如 ModSecurity）配套使用的规则集。
-
-
-
-
+- OWASP Top 10：列出了 Web 应用中最常见的十大安全风险（如 SQL 注入、跨站脚本攻击 XSS 等），是学习 Web 安全的入门指南。
+- 工具和项目：如 OWASP ZAP（漏洞扫描工具）、OWASP Dependency-Check（依赖检查工具）等。
+- OWASP CRS：即 Core Rule Set（核心规则集），是与 WAF（如 ModSecurity）配套使用的规则集。
 
 ## OWASP CRS（Core Rule Set）
 OWASP CRS 是一组预定义的规则集，用于 Web 应用防火墙（WAF），旨在检测和阻止常见的 Web 攻击。
@@ -23,8 +19,6 @@ for example:
 SecRule ARGS "@rx (?i)union.*select" "id:942100,phase:2,block,msg:'SQL Injection Attempt'"
 ```
 这条规则检测 URL 参数中是否包含类似 `union select` 的 SQL 注入模式，如果检测到则拦截请求。
-
-
 
 # ModSecurity
 
