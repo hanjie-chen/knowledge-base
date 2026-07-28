@@ -2,19 +2,19 @@
 Title: Articles Template
 Author: 陈翰杰
 Instructor: chatGPT 3.5
-CoverImage: ./images/cover_image.jpeg
+CoverImage: ./resources/images/cover_image.jpeg
 RolloutDate: 2023-01-01
 ---
 
 ```
 BriefIntroduction: 
 这里存放文章简介，原本的想法的类似与论文的摘要功能，我想着要不要把chatGPT3.5接入进来。让她帮我生成文章简介，看看我自己写的文章简介和她写的文章简介哪一个更好。
-封面图片默认路径 ./images/cover_image.jpg [png, webp, ...] 还是需要保留，因为同一个category（path）下面共用同一个images文件夹，所以可能不一定都叫做cover_image
+封面图片存放在 ./resources/images/ 中；文件名可以按内容需要调整。
 ```
 
 <!-- split -->
 
-![cover image](./images/cover_image.jpeg)
+![cover image](./resources/images/cover_image.jpeg)
 
 # Before we beginning/Background
 

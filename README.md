@@ -26,10 +26,12 @@
 
 ## Content Resources
 
-文章目录通常会把正文和附属资源放在一起管理。常见形式如下：
+草稿只有图片资源时，可以直接使用 `images/`，不必预先创建完整的资源结构。
+
+准备发布时，统一使用以下结构：
 
 ```text
-articles-dir/
+content-dir/
 ├── example-1.md
 ├── example-2.md
 └── resources/
@@ -39,52 +41,48 @@ articles-dir/
         └── example-2-en.md
 ```
 
-一般来说：
-
-- `resources/images/` 存放与文章对应的图片等资源文件
-- `resources/i18n/` 用于存放主文档的翻译 sidecar
-
-有些目录如果只有图片资源，也可能直接使用 `images/`，不一定强制引入完整的 `resources/` 结构。
+- `resources/images/` 存放正文使用的图片等资源
+- `resources/i18n/` 存放对应正文的翻译 sidecar
 
 ## Special Directories
 
-这个仓库里有一些特殊目录
-
-1. `__template__/` 用于存放文章模板。
-2. `.githooks/` 用于存放仓库的 Git hooks；`pre-commit` 是统一入口，具体检查按顺序放在 `pre-commit.d/`。
-3. `.kb-tools/` 用于存放这个仓库的辅助工具和脚本。如果要使用或修改其中的工具，请优先阅读对应子目录下的 `README.md`。
-   - `.kb-tools/translator/` 用于生成或更新文章的英文翻译
-   - `.kb-tools/website_sync/` 用于判断一次变更是否会影响网站发布结果
+- `__template__/` — 存放可发布正文的模板
+- `.githooks/` — 存放仓库管理的 Git hooks
+- `.kb-tools/` — 存放仓库辅助工具；使用或修改前先阅读对应的 `README.md`
+  - `.kb-tools/translator/` — 生成或更新正文的英文翻译
+  - `.kb-tools/website_sync/` — 判断变更是否影响网站发布结果
 
 ## Setup
 
-维护这个仓库需要的配置。
+配置仓库的 Git hooks：
 
-[Windows OS only] 启动大小写敏感
+```shell
+git config core.hooksPath .githooks
+```
+
+验证配置：
+
+```shell
+git config --get core.hooksPath
+```
+
+在 Windows 上，让 Git 区分路径大小写：
 
 ```shell
 git config core.ignorecase false
 ```
 
-配置 githook 路径
-
-```shell
-git config core.hooksPath .githooks
-# 验证
-git config --get core.hooksPath
-```
-
-同时需要保证命令行中可以正常运行：
+翻译工具依赖 Python 3 和 Codex CLI。确保以下命令可以正常运行：
 
 ```shell
 python3 --version
-codex exec
+codex --version
 ```
 
-`.kb-tools/translator` 和翻译 pre-commit hook 会调用 codex exec。如果默认模型不可用，请先升级 Codex CLI，或显式指定模型。
+翻译模型的配置方式见 [translator README](.kb-tools/translator/README.md)。
 
 ## Publishing
 
-Git push  会触发 github action 的检测规则，如果改动了那么满足发布标准的文章，那么就会触发网站同步。
+Push 到 `main` 时，GitHub Actions 会检查本次变更是否影响网站发布结果。如果存在相关变更，workflow 会通知 [website](https://github.com/hanjie-chen/website) 执行内容同步。
 
-具体规则见 `.kb-tools/website_sync/` 和 `.github/workflows/`。
+路径判定规则见 [website sync README](.kb-tools/website_sync/README.md)，workflow 说明见 [GitHub workflows README](.github/workflows/README.md)。
