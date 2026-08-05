@@ -1,20 +1,8 @@
 # Coding Agents
 
-## Scope
+AI is your hands, not your brain
 
-这个目录是与 coding agents 相关的实践、工具使用和方法论笔记。
-
-## Topics
-
-- `codex/`
-- `claude-code/`
-- `practice/`
-
-## Observations
-
-### AI is your hands, not your brain
-
-使用 coding agnet 写代码（不是学习）最大的感悟是，不要试图把 AI 当成你的大脑，它只能当你的手。
+使用 coding agnet 写代码（不是学习），不要试图把 AI 当成你的大脑，它只能当你的手。
 
 - 当你懂原理时，你是老板，coding agent 是给你打工的，你付钱，它省时；
 
