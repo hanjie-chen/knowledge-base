@@ -1,6 +1,6 @@
-# Python virtual environment
+# background
 
-当我们在一台 ubuntu server 中使用 pip install 命令的时候，可能会遇到这样子的问题
+当我们在一台 ubuntu server 中使用 pip install 命令的时候，可能会遇到这样子的报错
 
 ```bash
 $ pip install flask
@@ -26,16 +26,13 @@ note: If you believe this is a mistake, please contact your Python installation 
 hint: See PEP 668 for the detailed specification.
 ```
 
-这是因为错误提示 `externally-managed-environment` 表示当前的 Python 环境是由操作系统或发行版严格管理的（例如 Debian/Ubuntu 等系统使用 apt 管理系统包），pip 默认在这种环境下禁止直接修改系统 Python 库，以防止破坏系统的稳定性。
+错误提示 `externally-managed-environment` 表示当前的 Python 环境是由操作系统或发行版严格管理的（例如 Debian/Ubuntu 等系统使用 apt 管理系统包），pip 默认在这种环境下禁止直接修改系统 Python 库，防止破坏系统的稳定性。
 
-也就是这个 python 其实是系统 python
+也就是这个 python 其实是系统 python，我们不能动它
 
-- 系统 Python 是由操作系统（如 Ubuntu、Debian 等）预装的 Python 解释器，通常位于 /usr/bin/python3 或类似的路径。
-- 它被操作系统用来运行一些核心功能或工具（比如包管理器、系统脚本等），因此被标记为“受外部管理”（externally managed），不允许随意修改其依赖。
+# Python virtual environment
 
-我们可以使用 python virtual environment，这是一个独立的 Python 运行环境，它包含自己的 Python 解释器和独立的第三方包集合。
-
-使用虚拟环境可以让你在同一台机器上创建多个独立的项目环境，避免项目之间的依赖冲突，同时不会污染系统级安装的 Python 及其库。
+为了解决这个问题，可以使用 python virtual environment，创建一个独立的 Python 运行环境。
 
 Python 3.3 以后内置了 `venv` 模块，可以直接使用该模块创建虚拟环境。常见的创建命令为：
 
@@ -43,15 +40,10 @@ Python 3.3 以后内置了 `venv` 模块，可以直接使用该模块创建虚�
 python3 -m venv <venv-name>
 ```
 
-- `python3`：调用你系统中的 Python 3 解释器。
 - `-m venv`：使用 `venv` 模块来创建虚拟环境。
-- `venv`：指定虚拟环境的目录名称（这个名称你可以根据项目需要进行更改，例如 `env`、`.venv` 等）。
+- `<venv-name>`：指定虚拟环境的路径
 
-执行该命令后，会在当前目录下生成一个 `<venv-name>` 文件夹，其中包含以下几个重要子目录：
-
-- bin (或 Scripts, Windows 中)： 存放 Python 解释器和激活脚本。
-- lib (或 Lib, Windows 中)： 存放虚拟环境中安装的 Python 包。
-- include: 用于存放 C 语言头文件（某些 Python 包在编译时可能会需要）。
+执行该命令后，会在当前目录下生成一个 `<venv-name>` 文件夹。
 
 #### 激活与退出虚拟环境
 
