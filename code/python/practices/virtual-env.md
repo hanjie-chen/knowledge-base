@@ -26,9 +26,9 @@ note: If you believe this is a mistake, please contact your Python installation 
 hint: See PEP 668 for the detailed specification.
 ```
 
-错误提示 `externally-managed-environment` 表示当前的 Python 环境是由操作系统或发行版严格管理的（例如 Debian/Ubuntu 等系统使用 apt 管理系统包），pip 默认在这种环境下禁止直接修改系统 Python 库，防止破坏系统的稳定性。
+这表示当前的 Python 环境是由操作系统或发行版严格管理的（例如 Debian/Ubuntu 等系统使用 apt 管理系统包），pip 默认在这种环境下禁止直接修改系统 Python 库，防止破坏系统的稳定性。
 
-也就是这个 python 其实是系统 python，我们不能动它
+也就是说这个 python 其实是系统专用的，我们不能动它
 
 # Python virtual environment
 
@@ -37,19 +37,19 @@ hint: See PEP 668 for the detailed specification.
 Python 3.3 以后内置了 `venv` 模块，可以直接使用该模块创建虚拟环境。常见的创建命令为：
 
 ```shell
-python3 -m venv <venv-name>
+python3 -m venv <path/to/venv>
 ```
 
 - `-m venv`：使用 `venv` 模块来创建虚拟环境。
-- `<venv-name>`：指定虚拟环境的路径
+- `<path/to/venv-name>`：指定虚拟环境的路径
 
-执行该命令后，会在当前目录下生成一个 `<venv-name>` 文件夹。
+执行该命令后，会在对应路径下生成一个 `<venv-name>` 文件夹。
 
-#### 激活与退出虚拟环境
+## 激活与退出
 
-创建好虚拟环境后，需要激活它才能使用该环境内的 Python 和包管理工具（例如 pip）。激活方式根据操作系统不同而有所区别：
+创建好虚拟环境后，需要激活它才能使用该环境内的 Python 和包管理工具（例如 pip）。
 
-**在 Linux/macOS 系统：**
+在 Linux/macOS 系统：
 
 ```javascript
 source <venv-name>/bin/activate
@@ -101,15 +101,7 @@ source base/bin/activate
 source ~/.venv/base/bin/activate
 ```
 
-> [!note]
->
-> 当然也可以设置命令每次手动启动，在 `~/.bashrc` 中添加 alias
->
-> ```shell
-> alias activate-base="source ~/.venv/base/bin/activate"
-> ```
-
-## VScode python interptreter set
+## vscode setting
 
 vscode 可能无法主动搜索到这个 python virtual env, 需要手动添加路径，虚拟环境的 Python 解释器位于：
 
