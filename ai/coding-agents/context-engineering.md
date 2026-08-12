@@ -1,80 +1,49 @@
-在我们使用 coding agent(claude code, codex) 的时候，常常遇到这样子一个问题：如何让 AI 快速读懂一个比较复杂的 project，然后上手修改？
+# Context Engineering
 
-其实问题可以分成两部分：
+session 的上下文会随会话消失，repo 里的东西会留下来。
 
-1. 让 AI 读懂项目
-2. 让 AI 知道如何修改
+context engineering 就是管理这两者之间的信息流动。
 
-# Understand the project
+做个比喻来说的话，类似于干木工：
 
-为了让 AI 更快读懂项目，我目前觉得最有效的方法，是把文档分成三个层次：
+- 开工前，从仓库把需要的图纸和材料搬上工作台 → 入
+- 干活时，台面就这么大，锯末刨花别堆上去 → 中
+- 收工前，成品和半成品必须归位，因为台面明早会被清空 → 出
 
-- project root README.md
-- sub-folder README.md
-- project root docs/
+分成三个方向：
 
-## project root README.md
+## 入口：repo → session
 
-根目录下的 README.md 应该作为整个仓库的入口页，内容可以包括：
+让 agent 用最少的 token 建立对 repo 的正确认知。
 
-- 项目简介
-- 总体架构图 / 主链路
-- 仓库结构
-- 最常用命令
-- 指向更详细文档的索引
+- 文档分层（README 三层 / AGENTS 三层 / docs/ ）→ doc-layering.md
+- 规则跟着目标仓库走 → cross-git-repo-in-one-session.md
+- 路径即分类 → ../agent-foundations/filesystem-as-context.md
 
-这份 README.md 同时是给人和 AI 看的，所以可以根据团队或者个人习惯，我一般选择中英文混合。
+## 运行中：运行时的流量控制
 
-## sub-folder README.md
+防止中间产物污染主 context。
 
-对于那些本身拥有独立子系统逻辑的目录，我们可以在目录下单独放一份 README.md，用来解释：
+- subagent 隔离：实验的 log、代码、设计过程留在子会话，只回来一个结论
 
-- 这个子系统的职责是什么
-- 入口文件在哪里
-- 关键文件分别做什么
-- 常见改动通常落在哪些文件上
+  在 global agents.md 中写上
 
-如果把这些内容都堆到 project root README.md 里，根 README 很快就会膨胀；把说明下沉到各自目录，可以让根 README 保持轻量。
+  ```markdown
+  ## Subagents
+  
+  - Use subagents for bounded, independent work when parallelism or context isolation would materially help, especially for noisy investigations and experiments; keep trivial or tightly coupled work in the main agent.
+  - Keep goals, decisions, and final synthesis in the main agent; require subagents to return concise evidence and conclusions.
+  - When a subagent completes its task, collect its result, then close its thread to release the slot; use a fresh subagent for unrelated work.
+  ```
 
-代价也很明显：当目录结构或子系统逻辑变化时，对应的 sub-folder README.md 也要一起维护。
+  关于 global agents.md 可以参考 https://github.com/hanjie-chen/personal-config/blob/main/codex/AGENTS.md
 
-同时这里的 README.md 主要是给 ai 读和维护的，所以最好和代码对齐使用纯英文。
+- skill：把重复摸索固化，避免每次都用 token 重新试错 → skill-guide.md
 
-## project root docs/
+## 出：session → repo
 
-当一份文档同时跨越多个目录，或者本身就是较长的专题说明时，更适合放到 docs/ 目录里。
+会话中产生的状态，必须在 session 结束前落盘。
 
-比如：
-
-1. 跨多个子系统的架构文档
-2. 线上故障排查 runbook
-3. 设计决策记录（ADR）
-
-# Modify the project
-
-当我们解决了“让 AI 读懂 project”这个问题之后，下一步就是让 AI 知道该如何安全地修改它。
-
-这时就需要另一类文档：agent instruction file，比如 Codex 使用 AGENTS.md，Claude Code 使用 CLAUDE.md。接下来我们以 AGENTS.md 为例。
-
-AGENTS.md 和 README.md 的区分：
-
-- README.md：这是什么项目，怎么跑，结构大概怎样
-- AGENTS.md：如果现在要动这个仓库，应该先看哪里、遵守什么约束、不要踩哪些坑，也就是行动指南。
-
-而 AGENTS.md 也分为三层
-
-- global AGENTS.md
-- project root AGENTS.md
-- sub-floder AGENTS.md
-
-## global AGENTS.md
-
-通用协作偏好，跨仓库都成立。
-
-## project root AGENTS.md
-
-这个 repo 的跨子系统规则。
-
-## sub-folder AGENTS.md
-
-只放该目录独有的约束；行为说明优先放 README.md，流程约束才放 AGENTS.md。
+- commit：代码
+- decisions.md：已经想清楚的结论
+- handoff.md：还没成型、没有归宿的半成品 → handoff-vs-auto-compact.md

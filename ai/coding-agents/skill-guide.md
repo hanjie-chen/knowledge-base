@@ -1,3 +1,11 @@
+# 核心
+
+核心：把重复的工作流程化
+
+例如，要使用 github, 读取 PR, review 代码，那么 github 相关的 mcp 和 skill 就是必备的
+
+如果没有这些 skill, 那么模型就会花费大量的上下文来寻找最终能够解决的方案，浪费 token 和 conext windows, 为了避免重复错误的尝试才需要 skill
+
 # skills
 
 随着 agent 能力越来越强，skills 需要遵循一个原则，less is more
@@ -6,21 +14,24 @@
 
 当你的 skill 越来越多，就意味着你的上下文被占用的越多。如果一个 skill 可以帮你解决特定的问题。
 
-请阅读：https://x.com/systematicls/status/2028814227004395561
+## 为什么 skill 越少越好
 
-# superpowers
+因为现在的模型 agent 能力越来越强了，
 
-source: [obra/superpowers: An agentic skills framework & software development methodology that works.](https://github.com/obra/superpowers)
+我之前使用过 superpowers 使用 codex 配合 gpt-5.4, gpt-5.5 效果感觉不错，虽然有点耗费额度，但是代码效果很好。
 
-superpowers 包含一整套 skill，包括一个顶层 using-superpowers 作为总入口和使用指南，其他的 skill 分别对应设计、计划、调试、测试、评审、分支收尾等具体环节。
+但是当 openai 更新到了 gpt-5.6-sol 的时候，我尝试不使用 superpowers 结果发现，代码质量依旧很好，而且耗费的额度还变少了。
 
-默认是：澄清需求/设计（braining storm） → 写实施计划（writing plans） → 实现（worktree + subagnet drive） → 做测试和 review → 收尾验证。
+想想也是，像 openai, anthropic 这样子的公司，不仅自己的员工在大量的使用 agent，而且可以看到哪些 skills 被大量的使用，那么为啥他们不直接把这些skill炼化到模型中呢？
 
-直接告诉 codex 让他自行安装即可
+不仅如此，甚至还有很多关于 coding agent 的插件、使用技巧、解决方案，都会被这些公司一一手编到他们自己的产品中去，而且速度极快。
 
-Codex 启动时会扫描 `~/.agents/skills/`，读取 skill 的说明，然后在对话中按需触发。`using-superpowers` 这个总控 skill 会被自动发现，并负责把其他 skill 带起来。
+所以我们根本不需要额外安装任何东西，只需要使用这些基础模型公司原生的产品即可。
 
-安装好之后，日常使用时，基本上可以依赖自动触发（using-superpowers）然后观察它的流程，自然的就能明白这些 skill 是做什么的
+所以，每当基础模型公司做一次大规模的更新的时候，我们都要重新思考一下应该如何与 coding agent 协作，看看 global agents.md, skills 等上下文是否要做一些优化，以免旧的内容降低效率
 
 
 
+# Reference
+
+https://x.com/systematicls/status/2028814227004395561
