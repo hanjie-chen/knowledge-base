@@ -1,4 +1,4 @@
-# 核心
+# Skill
 
 核心：把重复的工作流程化
 
@@ -6,7 +6,7 @@
 
 如果没有这些 skill, 那么模型就会花费大量的上下文来寻找最终能够解决的方案，浪费 token 和 conext windows, 为了避免重复错误的尝试才需要 skill
 
-# skills
+# rule
 
 随着 agent 能力越来越强，skills 需要遵循一个原则，less is more
 

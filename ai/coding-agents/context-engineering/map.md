@@ -23,9 +23,9 @@ context engineering 就是管理这两者之间的信息流动。
 
 防止中间产物污染主 context。
 
-- subagent 隔离：实验的 log、代码、设计过程留在子会话，只回来一个结论 →sbuagent.md
+- subagent 隔离：实验的 log、代码、设计过程留在子会话，只回来一个结论 → subagent.md
 
-- skill：把重复摸索固化，避免每次都用 token 重新试错 → skill-guide.md
+- skill：把重复摸索固化，避免每次都用 token 重新试错 → skill.md
 
 ## 出口：session → repo
 
