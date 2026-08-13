@@ -18,29 +18,16 @@ context engineering 就是管理这两者之间的信息流动。
 
 - 文档分层（README 三层 / AGENTS 三层 / docs/ ）→ doc-layering.md
 - 规则跟着目标仓库走 → cross-git-repo-in-one-session.md
-- 路径即分类 → ../agent-foundations/filesystem-as-context.md
 
-## 运行中：运行时的流量控制
+## 运行中：session 内部上下文控制
 
 防止中间产物污染主 context。
 
-- subagent 隔离：实验的 log、代码、设计过程留在子会话，只回来一个结论
-
-  在 global agents.md 中写上
-
-  ```markdown
-  ## Subagents
-  
-  - Use subagents for bounded, independent work when parallelism or context isolation would materially help, especially for noisy investigations and experiments; keep trivial or tightly coupled work in the main agent.
-  - Keep goals, decisions, and final synthesis in the main agent; require subagents to return concise evidence and conclusions.
-  - When a subagent completes its task, collect its result, then close its thread to release the slot; use a fresh subagent for unrelated work.
-  ```
-
-  关于 global agents.md 可以参考 https://github.com/hanjie-chen/personal-config/blob/main/codex/AGENTS.md
+- subagent 隔离：实验的 log、代码、设计过程留在子会话，只回来一个结论 →sbuagent.md
 
 - skill：把重复摸索固化，避免每次都用 token 重新试错 → skill-guide.md
 
-## 出：session → repo
+## 出口：session → repo
 
 会话中产生的状态，必须在 session 结束前落盘。
 
