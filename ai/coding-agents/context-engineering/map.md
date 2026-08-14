@@ -33,4 +33,4 @@ context engineering 就是管理这两者之间的信息流动。
 
 - commit：代码
 - decisions.md：已经想清楚的结论
-- handoff.md：还没成型、没有归宿的半成品 → handoff-vs-auto-compact.md
+- handoff.md：还没成型、没有归宿的半成品 → handoff.md
