@@ -48,3 +48,14 @@ context engineering 就是管理这两者之间的信息流动。
 - handoff.md：还没成型、没有归宿的半成品 → handoff.md
 
 这三件事做得越彻底，session 就越可以随手丢弃——理想状态是 `/clear` 之后， agent 靠 repo 自己就能恢复
+
+# Reference
+
+claude 官方博客发布的这一篇文章
+
+[Maximizing the value of your Claude Code sessions | Claude by Anthropic](https://claude.com/blog/maximizing-the-value-of-your-claude-code-sessions)
+
+以及这一篇x.com 上面的文章
+
+https://x.com/systematicls/status/2028814227004395561
+
