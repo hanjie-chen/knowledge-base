@@ -12,7 +12,7 @@
 
 # Context Engineering
 
-当我们和一个 coding agent 协作的时候，往往是在一个 session 中展开的，但是 session 的上下文会随会话消失，repo 里的东西会留下来。
+当我们和一个 agent 协作的时候，往往是在一个 session 中展开的，但是 session 的上下文会随会话消失，repo 里的东西会留下来。
 
 context engineering 就是管理这两者之间的信息流动。
 
@@ -28,14 +28,14 @@ context engineering 就是管理这两者之间的信息流动。
 
 让 agent 用最少的 token 建立对 repo 的正确认知。
 
-- 文档分层（README 三层 / AGENTS 三层 / docs/ ）→ doc-layering.md
+- 文档分层（README 三层 + AGENTS 三层 + docs/ ）→ doc-layering.md
 - 规则跟着目标仓库走 → cross-git-repo-in-one-session.md
 
 ## 运行中：session 内部上下文控制
 
-防止中间产物污染主 context。
+防止中间产物污染 main session 的上下文。
 
-- subagent 隔离：实验的 log、代码、设计过程留在子会话，只回来一个结论 → subagent.md
+- subagent：验证性的试验、网络的调查、log 的过滤和分析等，留在 subagent，只回来一个结论 → subagent.md
 
 - skill：把重复摸索固化，避免每次都用 token 重新试错 → skill.md
 
