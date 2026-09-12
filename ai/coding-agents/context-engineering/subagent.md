@@ -1,6 +1,8 @@
 # Subagent
 
-为了节省 main session 的 ctx， 我们常常需要开启 subagent 来帮忙处理一些中间的产物，比如说 log，等垃圾内容，防止这些东西消耗和污染我们宝贵的 main session 上下文
+我们的 main session 的 ctx 往往都不大，所以我们需要尽量节省 main session 的上下文，不要让无关的内容、噪声（无关的log，实验的过程等）消耗 main session 的上下文。
+
+这个时候，我们可以开启 subagent 来帮忙处理一些中间的产物，比如说 log，等垃圾内容，防止这些东西消耗和污染我们宝贵的 main session 上下文
 
 在 codex 中的系统提示词中，有一句类似的表述：除非用户,agents.md, skill 主动要求使用 subagent 否则就绝不使用。
 
