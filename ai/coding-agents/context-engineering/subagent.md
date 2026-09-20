@@ -8,7 +8,7 @@
 
 这个时候，我们可以把这部分工作交给 subagent，让 subagent 在自己的上下文里完成探索，再把有用的结果带回来。主 agent 则继续负责目标、决策和最后的整合。
 
-## when to user?
+## when to use?
 
 我倾向于把边界清楚、可以独立完成的工作交给 subagent。
 
@@ -32,6 +32,8 @@
 
 也就是：结论、关键证据，以及还没弄清楚的地方。主 agent 不必读完整个探索过程，但需要知道判断从哪里来。
 
+# Configure subagent
+
 ## enable subagent
 
 在 codex 中的系统提示词中，有一句类似的表述：除非 user, agents.md, skill 主动要求使用 subagent 否则就绝不使用。
@@ -46,7 +48,7 @@
 - When a subagent completes its task, collect its result, then close its thread to release the slot; use a fresh subagent for unrelated work.
 ```
 
-# custom subagent
+## custom subagent model
 
 使用 subagent 可以节省 main session 的上下文，使得我们可以在一个 main session 聊的更久一些。
 
