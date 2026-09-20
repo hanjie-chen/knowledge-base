@@ -4,9 +4,9 @@
 
 使用 coding agent 时，有些工作会产生很多中间信息。
 
-例如，为了排查一个问题，agent 可能需要翻日志、读很多文件、尝试几个不同的假设。最后真正有用的，可能只有几条发现，但整个探索过程却占用了 main session 的大量上下文。
+例如，为了排查一个问题，可能需要翻日志、读很多文件、尝试几个不同的假设。最后真正有用的，可能只有一些简单的结论，但整个探索过程却相当的耗费上下文。
 
-这个时候，可以把一部分工作交给 subagent，让 subagent 在自己的上下文里完成探索，再把有用的结果带回来。主 agent 则继续负责目标、决策和最后的整合。
+这个时候，我们可以把这部分工作交给 subagent，让 subagent 在自己的上下文里完成探索，再把有用的结果带回来。主 agent 则继续负责目标、决策和最后的整合。
 
 ## when to user?
 
@@ -48,9 +48,13 @@
 
 # custom subagent
 
-使用 subagent 可以减少进入主会话的过程信息，但不一定减少总消耗，子 agent 也需要读材料和完成工作。
+使用 subagent 可以节省 main session 的上下文，使得我们可以在一个 main session 聊的更久一些。
 
-在 codex/chatgpt 中，如果什么都不设置，subagent 会继承 parent agent 的模型和 reasoning effort。也就是说主 agent 是 gpt-6-astra 的话，派三个 subagent 出去就是三个 astra 同时在跑。$20 的订阅真的撑不住。
+但是 subagent 也需要读材料和完成工作，这个时候往往消耗的总的 token 会更多。
+
+在 codex/chatgpt 中，如果什么都不设置，subagent 会继承 parent agent 的模型和 reasoning effort。也就是说主 agent 是 gpt-6-astra 的话，派三个 subagent 出去就是三个 astra 同时在跑。
+
+$20 的订阅直接见底了。
 
 但 subagent 干的活——读代码、找调用点、翻日志、跑实验——大多不需要主 agent 那个档位的能力。所以为 subagent 设置不同的默认模型，主 agent 保持不动。
 
