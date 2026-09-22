@@ -1,44 +1,46 @@
-把探索过程交给 subagent，让主 agent 留着上下文处理目标和判断。
+把探索过程交给 subagent，让 main session 留着 context windows 处理目标和判断。
 
 # Subagent
 
-使用 coding agent 时，有些工作会产生很多中间信息。
+我们使用 coding agent 时，有些中间步骤会产生很多的噪声。
 
-例如，为了排查一个问题，可能需要翻日志、读很多文件、尝试几个不同的假设。最后真正有用的，可能只有一些简单的结论，但整个探索过程却相当的耗费上下文。
+例如，为了排查一个问题，可能需要翻日志、读文件、尝试几个不同的假设。最后真正有用的，可能只有一个简洁的结论，但整个探索过程却相当的耗费上下文。
 
-这个时候，我们可以把这部分工作交给 subagent，让 subagent 在自己的上下文里完成探索，再把有用的结果带回来。主 agent 则继续负责目标、决策和最后的整合。
+这个时候，我们可以把这部分工作交给 subagent，让它完成任务，再把有用的结果带回来。main session 则继续负责目标、决策和最后的整合。
 
 ## when to use?
 
-我倾向于把边界清楚、可以独立完成的工作交给 subagent。
+什么时候使用 subagent 呢？我倾向于把边界清晰、可以独立完成的工作交给 subagent。
 
-例如，程序连接服务失败，需要分别检查配置、DNS 和代理。可以让 subagent 负责其中一项调查，再由主 agent 综合判断。
+例如，程序连接服务失败，需要分别检查配置、DNS 和代理。可以让 subagent 负责其中一项调查，再由 main session 综合判断。
 
-但如果下一步做什么，必须依赖上一步的结果，拆开之后就要不断解释和同步，留在主 agent 中可能更省事。
+但如果下一步做什么，必须依赖上一步的结果，拆开之后就要不断解释和同步，留在 main session 中可能更省事。
 
-所以，不需要每个任务都开启 subagent。只有分出去确实有帮助时才用。
+所以，只有分出去有收益的任务才使用 subagent，而不是每个任务都使用。
 
 ## what to bring back?
 
-假设让 subagent 调查代理是否导致连接失败。
+subagent 应该带回来什么结果？
 
-如果它只回来一句：`是代理的问题`
+如果让 subagent 调查代理是否导致连接失败，而它只回来一句：`是代理的问题`
 
-主 agent 其实很难判断这个结论靠不靠谱。但如果把所有日志都贴回来，又失去了隔离过程信息的意义。
+main session 其实很难判断这个结论是否可靠。但如果把所有日志都贴回来，又失去了隔离过程信息的意义。
 
-更有用的回报可以很短：
+有用的回报可以很短：
 
 `同一请求，直连成功，经过代理失败，重复测试结果一致。因此目前更怀疑代理链路。还没区分是节点问题还是本机代理配置问题。测试记录保存在 xxx，需要时可以继续检查。`
 
-也就是：结论、关键证据，以及还没弄清楚的地方。主 agent 不必读完整个探索过程，但需要知道判断从哪里来。
+也就是：结论、关键证据，以及还没弄清楚的地方。
+
+main session 不必读完整个探索过程，但需要知道判断从哪里来。
 
 # Configure subagent
 
-## enable subagent
+## enable subagent in codex/chatgpt
 
 在 codex 中的系统提示词中，有一句类似的表述：除非 user, agents.md, skill 主动要求使用 subagent 否则就绝不使用。
 
-为了开启 subagent, 我一般将其放入到 [global AGENTS.md](https://github.com/hanjie-chen/personal-config/blob/main/codex/AGENTS.md)
+所以为了开启 subagent 我一般在 [global AGENTS.md](https://github.com/hanjie-chen/personal-config/blob/main/codex/AGENTS.md) 中添加如下的 rule:
 
 ```markdown
 ## Subagents
@@ -50,7 +52,7 @@
 
 ## custom subagent model
 
-使用 subagent 可以节省 main session 的上下文，使得我们可以在一个 main session 聊的更久一些。
+使用 subagent 可以节省 main session 的上下文，使得我们可以聊的更久一些。
 
 但是 subagent 也需要读材料和完成工作，这个时候往往消耗的总的 token 会更多。
 
@@ -58,7 +60,7 @@
 
 $20 的订阅直接见底了。
 
-但 subagent 干的活——读代码、找调用点、翻日志、跑实验——大多不需要主 agent 那个档位的能力。所以为 subagent 设置不同的默认模型，主 agent 保持不动。
+但 subagent 干的活——读代码、找调用点、翻日志、跑实验——大多不需要主 agent 那个档位的能力。所以可以为 subagent 设置低一档的模型，主 agent 保持不动。
 
 例如：
 
