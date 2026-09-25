@@ -4,6 +4,8 @@ keep simple, keep focus, keep update
 
 我们一个一个的来说
 
+这里三个原则将用于 AGENTS.md/CLAUDE.md, README.md
+
 ## keep simple
 
 越简单越好，越简洁越好。
