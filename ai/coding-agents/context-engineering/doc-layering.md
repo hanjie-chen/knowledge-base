@@ -1,4 +1,4 @@
-在我们使用 coding agent(claude code, codex) 的时候，常常遇到这样子一个问题：如何让 AI 快速读懂一个比较复杂的 project，然后上手修改？
+在我们使用 coding agent 的时候，我们应该如何让 AI 理解一个复杂的 project，然后按照我们的协作规定上手修改？
 
 其实问题可以分成两部分：
 
@@ -15,15 +15,33 @@
 
 ## project root README.md
 
-根目录下的 README.md 应该作为整个仓库的入口页，内容可以包括：
+> project root README.md 后续简写为 README(root)
 
-- 项目简介
-- 总体架构图 / 主链路
-- 仓库结构
-- 最常用命令
-- 指向更详细文档的索引
+在我们的设计中 project root AGENTS.md 的第一个条目，永远都是 [read first](https://github.com/hanjie-chen/personal-config/blob/main/codex/AGENTS.code.example.md):
 
-这份 README.md 同时是给人和 AI 看的，所以可以根据团队或者个人习惯，我一般选择中英文混合。
+```markdown
+## Read First
+
+Start with the root `README.md`. Before planning or making non-trivial changes in a subsystem, read its nearest `README.md` and any `AGENTS.md` files on the path from the repository root to the target files.
+```
+
+这一条 rule 意味着 README(root) 一定会被阅读，甚至被 ai 反复阅读。根据这一点可以推导出：它应该优先包含稳定的信息。
+
+而于此同时，这个文件，也是我进入项目的入口（虽然是自己的项目，但是总会遗忘某些部分）
+
+所以，我们的 README(root) 怎么写，非常的重要，因为这个文件即是人的入口，也是 ai 的入口
+
+我们的标准是：无论接下来要修改哪个模块，阅读这份文件对读者有帮助吗？
+
+按照这个标准，README(root) 至少需要回答三个问题：
+
+1. 开头：这是什么项目？（项目简介）
+2. 代码在哪里？（仓库 ）
+3. 如何运行这个仓库中的代码？
+
+还有一些可选的内容：
+
+1. 项目的总体架构图 / network traffic flow 等
 
 ## sub-folder README.md
 
