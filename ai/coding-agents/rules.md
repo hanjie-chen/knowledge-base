@@ -10,9 +10,9 @@ keep simple, keep focus, keep update
 
 越简单越好，越简洁越好。
 
+保持精简
 
-
-### keep foucs
+### keep focus
 
 保持聚焦
 
