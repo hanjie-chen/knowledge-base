@@ -6,11 +6,13 @@ RolloutDate: 2026-03-21
 
 ![codex reconnect](./resources/images/codex-reconnect.png)
 
+> 2026-11-18 更新：下文是旧 Clash 配置的历史排障方案，相关维护脚本已停用，不要照此重新安装或运行。目前 `sg` 使用 Clash Verge 的 Rules Enhancement 维护明确的 OpenAI 代理规则，不依赖 `clash-fix-openai`。旧脚本的文件清理仍待完成。
+
 ## Issue Description
 
 在 Windows 10 环境中使用 Codex 时，频繁出现 `reconnect` 之后才能成功 thinking
 
-## Root Cause
+## Possible Cause
 
 当前使用的 Clash 订阅规则里，存在：
 
@@ -19,13 +21,15 @@ RolloutDate: 2026-03-21
 - MATCH,⚓️其他流量
 ```
 
-问题在于：
+这两条规则本身不能证明重连的原因。[Mihomo 的规则说明](https://wiki.metacubex.one/config/rules/)指出，规则按从上到下的顺序匹配；`GEOIP` 匹配的是目标 IP 的数据库归属，不是域名所属公司的国家。
 
-1. `chatgpt.com` 或 `chat.openai.com` 的某些解析结果会被错误识别到 `CN`
-2. 一旦命中 `GEOIP,CN,DIRECT`，请求会被直连
-3. 直连超时之后，Codex 就会表现成反复 `reconnect`
+一种需要验证的可能情况是：
 
-也就是说分流规则不够精确。
+1. 请求未被前面的域名规则接住，随后用于匹配的目标 IP 被 GeoIP 数据库归入 `CN`。
+2. 如果命中 `GEOIP,CN,DIRECT`，该连接就会走直连；如果没有命中，则继续判断后面的规则。
+3. 如果这条连接直连失败，可能导致应用重连。但节点链路、DNS、TLS 或服务端异常等也可能产生重连现象。
+
+原文没有保留足以核实上述因果链的真实连接日志、解析 IP 和数据库查询结果，因此不能把它写成已经确认的根因。即使观察到 `GeoIP(CN)`，也不能单凭这一点区分 DNS 返回异常和 GeoIP 数据库归类问题。
 
 ## Resolution
 
@@ -38,7 +42,7 @@ RolloutDate: 2026-03-21
 - DOMAIN-SUFFIX,oaiusercontent.com,⚓️其他流量
 ```
 
-这样可以确保：`chatgpt.com`, `chat.openai.com`, `ab.chatgpt.com`, `oaistatic.com`, `oaiusercontent.com` 都优先走代理，而不是落到 `GEOIP,CN,DIRECT`。
+在规则模式下，只要 Clash 能识别连接的目标域名，且这些规则之前没有其他规则先命中，这些域名及其子域名就会优先走指定代理组。这是明确路由意图的做法，不是已经证实重连根因，也不能保证消除所有重连。
 
 但是如果我们手动把订阅更新了，那么这些手工规则就会被覆盖。所以我们额外做了一个手动自动修复方案。
 
@@ -83,7 +87,7 @@ $log = Get-ChildItem "$env:USERPROFILE\.config\clash\logs" |
 Select-String -Path $log.FullName -Pattern "chatgpt.com|chat.openai.com|DomainSuffix\(chatgpt.com\)|DomainSuffix\(openai.com\)|GeoIP\(CN\)"
 ```
 
-如果看到的是：
+下面只是日志格式示例，不是当时保留的故障证据：
 
 ```text
 rule=DomainSuffix(chatgpt.com)
@@ -98,7 +102,7 @@ rule=DomainSuffix(openai.com)
 rAddr=chatgpt.com:443 ... rule=GeoIP(CN) proxy=DIRECT
 ```
 
-那就说明旧问题又回来了。
+如果真实连接日志中同一条 OpenAI 请求出现了上述命中情况，只能先确认该连接被规则分到了直连。还需核对当时实际使用的目标 IP、DNS 结果和直连错误，才能继续判断原因。
 
 ## powershell scripts
 
