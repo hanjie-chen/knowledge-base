@@ -6,7 +6,7 @@ RolloutDate: 2026-03-21
 
 ![codex reconnect](./resources/images/codex-reconnect.png)
 
-> 2026-11-18 更新：下文是旧 Clash 配置的历史排障方案，相关维护脚本已停用，不要照此重新安装或运行。目前 `sg` 使用 Clash Verge 的 Rules Enhancement 维护明确的 OpenAI 代理规则，不依赖 `clash-fix-openai`。旧脚本的文件清理仍待完成。
+> 2026-11-18 更新：下文是旧 Clash 配置的历史排障方案，相关维护脚本及日志已删除，不要照此重新安装或运行。目前 `sg` 使用 Clash Verge 的 Rules Enhancement 维护明确的 OpenAI 代理规则，不依赖 `clash-fix-openai`。
 
 ## Issue Description
 
